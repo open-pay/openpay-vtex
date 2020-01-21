@@ -1,34 +1,36 @@
 {
     "exportFormatVersion": 2,
-    "exportTime": "2019-11-15 18:36:01",
+    "exportTime": "2020-01-21 17:34:11",
     "containerVersion": {
-        "path": "accounts/4702907809/containers/13043242/versions/30",
+        "path": "accounts/4702907809/containers/13043242/versions/43",
         "accountId": "4702907809",
         "containerId": "13043242",
-        "containerVersionId": "30",
-        "name": "Ver 0.30",
+        "containerVersionId": "43",
+        "name": "Openpay VTEX GTM",
         "container": {
             "path": "accounts/4702907809/containers/13043242",
             "accountId": "4702907809",
             "containerId": "13043242",
             "name": "openpay vtex",
-            "publicId": "GTM-OPENPAY",
+            "publicId": "GTM-592LR4K",
             "usageContext": [
                 "WEB"
             ],
-            "fingerprint": "1572047381375",
+            "fingerprint": "1579627630514",
             "tagManagerUrl": "https://tagmanager.google.com/#/container/accounts/4702907809/containers/13043242/workspaces?apiLink=container"
         },
-        "tag": [{
+        "tag": [
+            {
                 "accountId": "4702907809",
                 "containerId": "13043242",
                 "tagId": "2",
-                "name": "OpenPay-DeviceSessionId",
+                "name": "Openpay-DeviceSessionId",
                 "type": "html",
-                "parameter": [{
+                "parameter": [
+                    {
                         "type": "TEMPLATE",
                         "key": "html",
-                        "value": "<script src=\"https://openpay.s3.amazonaws.com/openpay.v1.min.js\"></script>\n<script src=\"https://openpay.s3.amazonaws.com/openpay-data.v1.min.js\"></script>\n<script>\n\n$(document).ready(function() {\nvtexjs.checkout.getOrderForm().done(function(orderForm){\nOpenPay.setId('{{op_merchant_id}}');\nOpenPay.setApiKey('{{op_pk}}');\nOpenPay.setSandboxMode({{op_sandbox_mode}});\nvar deviceSessionIdOpenPay = OpenPay.deviceData.setup();\nconsole.log('deviceSessionIdOpenPay', deviceSessionIdOpenPay);\nwindow.vtex.deviceFingerprint = deviceSessionIdOpenPay;\n});\n});\n</script>"
+                        "value": "<script src=\"https://openpay.s3.amazonaws.com/openpay.v1.min.js\"></script>\n<script src=\"https://openpay.s3.amazonaws.com/openpay-data.v1.min.js\"></script>\n<script>\n\n$(document).ready(function() {\n      vtexjs.checkout.getOrderForm().done(function(orderForm){\n      OpenPay.setId('{{openpay_merchant_id}}');\n      OpenPay.setApiKey('{{openpay_public_key}}');\n      OpenPay.setSandboxMode({{openpay_sandbox_mode}});\n      var deviceSessionIdOpenPay = OpenPay.deviceData.setup();\n      console.log('deviceSessionIdOpenPay', deviceSessionIdOpenPay);\n      window.vtex.deviceFingerprint = deviceSessionIdOpenPay;\n\t});\n});\n</script>"
                     },
                     {
                         "type": "BOOLEAN",
@@ -36,7 +38,7 @@
                         "value": "false"
                     }
                 ],
-                "fingerprint": "1572046697349",
+                "fingerprint": "1579627018892",
                 "firingTriggerId": [
                     "5"
                 ],
@@ -49,12 +51,13 @@
                 "accountId": "4702907809",
                 "containerId": "13043242",
                 "tagId": "3",
-                "name": "OpenPay-PaymentReference",
+                "name": "Openpay-PaymentReference",
                 "type": "html",
-                "parameter": [{
+                "parameter": [
+                    {
                         "type": "TEMPLATE",
                         "key": "html",
-                        "value": "<script>\n$(document).ready(function(){\n  var host='{{op_paynet_host}}';\n  var id='{{op_merchant_id}}';\n  var orderId = window.location.search.replace('?og=', '');\n  $.get('/api/checkout/pub/orders/order-group/' + orderId, function(data, status){\n    console.log(data.length);\n    console.log(data[0].paymentData.transactions.length);\n    console.log(data[0].paymentData.transactions[0].payments.length);\n    if (data.length>0 && data[0].paymentData.transactions.length > 0 && data[0].paymentData.transactions[0].payments.length > 0) {\n      var tid= data[0].paymentData.transactions[0].payments[0].connectorResponses.Tid;\n      var nsu= data[0].paymentData.transactions[0].payments[0].connectorResponses.nsu;\n      if (tid != nsu){\n        var url= host + '/paynet-pdf/' + id + '/' + tid;\n        console.log('referenceOpenPay', url);\n        $('#checkout-confirmation-top').append('<div class=\"openpay-referencia\" style=\"padding: 10px 20px;margin-top: 10px;background: white;display: inline-block;border-radius:5px;cursor: pointer;box-shadow: 0 1px 3px 0 rgba(0,0,0,.25);\"><a style=\"text-decoration: none;color: #137752;\" href=\"'+ url + '\" target=\"_blank\">Referencia 2</a></div>');\n      }\n    }\n  }\n  );\n}\n);\n</script>"
+                        "value": "<script>\n$(document).ready(function(){\n  var merchantId ='{{openpay_merchant_id}}';\n  var isSandbox = 'true' === '{{openpay_sandbox_mode}}';\n  var orderId = window.location.search.replace('?og=', '');\n  $.get('/api/checkout/pub/orders/order-group/' + orderId, function(data, status){\n    if (data.length>0 && data[0].paymentData.transactions.length > 0 && data[0].paymentData.transactions[0].payments.length > 0) {\n      var pago = data[0].paymentData.transactions[0].payments[0];\n      var tipoPago = pago.paymentSystemName;\n      var orderData = pago.connectorResponses;\n      var tid= orderData.Tid;\n      var nsu= orderData.nsu;\n      var isSpei = 'SPEI' === tipoPago;\n      if (tid == nsu){\n        console.log('Openpay no reference url');\n        return;\n      }\n\n      console.log('Openpay isSandbox: ' + isSandbox);\n      console.log('Openpay payment tid: ' + tid);\n      console.log('Openpay payment nsu: ' + nsu);\n      console.log('Openpay payment isSpei: ' + isSpei);\n\n      var host = 'https://dashboard.openpay.mx';\n      if (isSandbox) {\n        host = 'https://sandbox-dashboard.openpay.mx';\n      }\n\n      var url = host + '/paynet-pdf/' + merchantId + '/' + tid;\n      if (isSpei) {\n        url = host + '/spei-pdf/' + merchantId + '/' + nsu;\n      }\n      console.log('Url referenceOpenPay: ' + url);\n      var buttonTag = \"Imprimir PDF de \" + tipoPago;\n      $('#checkout-confirmation-top').append('<div class=\"openpay-referencia\" style=\"padding: 10px 20px;margin-top: 10px;background: white;display: inline-block;border-radius:5px;cursor: pointer;box-shadow: 0 1px 3px 0 rgba(0,0,0,.25);\"><a style=\"text-decoration: none;color: #137752;\" href=\"'+ url + '\" target=\"_blank\">'+buttonTag+'</a></div>');\n    }\n  }\n  );\n}\n);\n</script>"
                     },
                     {
                         "type": "BOOLEAN",
@@ -62,7 +65,7 @@
                         "value": "true"
                     }
                 ],
-                "fingerprint": "1572046477077",
+                "fingerprint": "1579627734719",
                 "firingTriggerId": [
                     "7"
                 ],
@@ -72,41 +75,48 @@
                 }
             }
         ],
-        "trigger": [{
+        "trigger": [
+            {
                 "accountId": "4702907809",
                 "containerId": "13043242",
                 "triggerId": "5",
-                "name": "OpenPay-DeviceSessionId",
+                "name": "Openpay-DeviceSessionId",
                 "type": "CUSTOM_EVENT",
-                "customEventFilter": [{
-                    "type": "EQUALS",
-                    "parameter": [{
-                            "type": "TEMPLATE",
-                            "key": "arg0",
-                            "value": "{{_event}}"
-                        },
-                        {
-                            "type": "TEMPLATE",
-                            "key": "arg1",
-                            "value": ".*"
-                        }
-                    ]
-                }],
-                "filter": [{
-                    "type": "CONTAINS",
-                    "parameter": [{
-                            "type": "TEMPLATE",
-                            "key": "arg0",
-                            "value": "{{Event}}"
-                        },
-                        {
-                            "type": "TEMPLATE",
-                            "key": "arg1",
-                            "value": "payment"
-                        }
-                    ]
-                }],
-                "fingerprint": "1572047261564"
+                "customEventFilter": [
+                    {
+                        "type": "EQUALS",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{_event}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": ".*"
+                            }
+                        ]
+                    }
+                ],
+                "filter": [
+                    {
+                        "type": "CONTAINS",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{Event}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": "payment"
+                            }
+                        ]
+                    }
+                ],
+                "fingerprint": "1579626872771"
             },
             {
                 "accountId": "4702907809",
@@ -114,95 +124,95 @@
                 "triggerId": "7",
                 "name": "Vtex-Event.GA_Event_orderplaced",
                 "type": "CUSTOM_EVENT",
-                "customEventFilter": [{
-                    "type": "MATCH_REGEX",
-                    "parameter": [{
-                            "type": "TEMPLATE",
-                            "key": "arg0",
-                            "value": "{{_event}}"
-                        },
-                        {
-                            "type": "TEMPLATE",
-                            "key": "arg1",
-                            "value": ".*"
-                        }
-                    ]
-                }],
-                "filter": [{
-                    "type": "CONTAINS",
-                    "parameter": [{
-                            "type": "TEMPLATE",
-                            "key": "arg0",
-                            "value": "{{Event}}"
-                        },
-                        {
-                            "type": "TEMPLATE",
-                            "key": "arg1",
-                            "value": "orderPlaced"
-                        }
-                    ]
-                }],
+                "customEventFilter": [
+                    {
+                        "type": "MATCH_REGEX",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{_event}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": ".*"
+                            }
+                        ]
+                    }
+                ],
+                "filter": [
+                    {
+                        "type": "CONTAINS",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{Event}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": "orderPlaced"
+                            }
+                        ]
+                    }
+                ],
                 "fingerprint": "1569879701545"
             }
         ],
-        "variable": [{
-                "accountId": "4702907809",
-                "containerId": "13043242",
-                "variableId": "1",
-                "name": "op_merchant_id",
-                "type": "c",
-                "parameter": [{
-                    "type": "TEMPLATE",
-                    "key": "value",
-                    "value": "mxxxxxxxxxxxxxxxxxxx"
-                }],
-                "fingerprint": "1572046756494",
-                "formatValue": {}
-            },
+        "variable": [
             {
                 "accountId": "4702907809",
                 "containerId": "13043242",
-                "variableId": "2",
-                "name": "op_paynet_host",
+                "variableId": "1",
+                "name": "openpay_merchant_id",
                 "type": "c",
-                "parameter": [{
-                    "type": "TEMPLATE",
-                    "key": "value",
-                    "value": "https://sandbox-dashboard.openpay.mx"
-                }],
-                "fingerprint": "1571952930218",
+                "parameter": [
+                    {
+                        "type": "TEMPLATE",
+                        "key": "value",
+                        "value": "mxxxxxxxxxxxxxxxxxxx"
+                    }
+                ],
+                "fingerprint": "1579626914624",
                 "formatValue": {}
             },
             {
                 "accountId": "4702907809",
                 "containerId": "13043242",
                 "variableId": "4",
-                "name": "op_pk",
+                "name": "openpay_public_key",
                 "type": "c",
-                "parameter": [{
-                    "type": "TEMPLATE",
-                    "key": "value",
-                    "value": "pk_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-                }],
-                "fingerprint": "1572046799793",
+                "parameter": [
+                    {
+                        "type": "TEMPLATE",
+                        "key": "value",
+                        "value": "pk_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                    }
+                ],
+                "fingerprint": "1579626969746",
                 "formatValue": {}
             },
             {
                 "accountId": "4702907809",
                 "containerId": "13043242",
                 "variableId": "5",
-                "name": "op_sandbox_mode",
+                "name": "openpay_sandbox_mode",
                 "type": "c",
-                "parameter": [{
-                    "type": "TEMPLATE",
-                    "key": "value",
-                    "value": "true"
-                }],
-                "fingerprint": "1572046598130",
+                "parameter": [
+                    {
+                        "type": "TEMPLATE",
+                        "key": "value",
+                        "value": "true"
+                    }
+                ],
+                "fingerprint": "1579626954666",
                 "formatValue": {}
             }
         ],
-        "builtInVariable": [{
+        "builtInVariable": [
+            {
                 "accountId": "4702907809",
                 "containerId": "13043242",
                 "type": "PAGE_URL",
@@ -239,7 +249,7 @@
                 "name": "Container Version"
             }
         ],
-        "fingerprint": "1572047825279",
-        "tagManagerUrl": "https://tagmanager.google.com/#/versions/accounts/4702907809/containers/13043242/versions/30?apiLink=version"
+        "fingerprint": "1579627756949",
+        "tagManagerUrl": "https://tagmanager.google.com/#/versions/accounts/4702907809/containers/13043242/versions/43?apiLink=version"
     }
 }
