@@ -1,12 +1,12 @@
 {
     "exportFormatVersion": 2,
-    "exportTime": "2020-01-21 17:34:11",
+    "exportTime": "2020-01-22 18:29:09",
     "containerVersion": {
-        "path": "accounts/4702907809/containers/13043242/versions/43",
+        "path": "accounts/4702907809/containers/13043242/versions/45",
         "accountId": "4702907809",
         "containerId": "13043242",
-        "containerVersionId": "43",
-        "name": "Openpay VTEX GTM",
+        "containerVersionId": "45",
+        "name": "test",
         "container": {
             "path": "accounts/4702907809/containers/13043242",
             "accountId": "4702907809",
@@ -16,7 +16,7 @@
             "usageContext": [
                 "WEB"
             ],
-            "fingerprint": "1579627630514",
+            "fingerprint": "1579628229585",
             "tagManagerUrl": "https://tagmanager.google.com/#/container/accounts/4702907809/containers/13043242/workspaces?apiLink=container"
         },
         "tag": [
@@ -57,7 +57,7 @@
                     {
                         "type": "TEMPLATE",
                         "key": "html",
-                        "value": "<script>\n$(document).ready(function(){\n  var merchantId ='{{openpay_merchant_id}}';\n  var isSandbox = 'true' === '{{openpay_sandbox_mode}}';\n  var orderId = window.location.search.replace('?og=', '');\n  $.get('/api/checkout/pub/orders/order-group/' + orderId, function(data, status){\n    if (data.length>0 && data[0].paymentData.transactions.length > 0 && data[0].paymentData.transactions[0].payments.length > 0) {\n      var pago = data[0].paymentData.transactions[0].payments[0];\n      var tipoPago = pago.paymentSystemName;\n      var orderData = pago.connectorResponses;\n      var tid= orderData.Tid;\n      var nsu= orderData.nsu;\n      var isSpei = 'SPEI' === tipoPago;\n      if (tid == nsu){\n        console.log('Openpay no reference url');\n        return;\n      }\n\n      console.log('Openpay isSandbox: ' + isSandbox);\n      console.log('Openpay payment tid: ' + tid);\n      console.log('Openpay payment nsu: ' + nsu);\n      console.log('Openpay payment isSpei: ' + isSpei);\n\n      var host = 'https://dashboard.openpay.mx';\n      if (isSandbox) {\n        host = 'https://sandbox-dashboard.openpay.mx';\n      }\n\n      var url = host + '/paynet-pdf/' + merchantId + '/' + tid;\n      if (isSpei) {\n        url = host + '/spei-pdf/' + merchantId + '/' + nsu;\n      }\n      console.log('Url referenceOpenPay: ' + url);\n      var buttonTag = \"Imprimir PDF de \" + tipoPago;\n      $('#checkout-confirmation-top').append('<div class=\"openpay-referencia\" style=\"padding: 10px 20px;margin-top: 10px;background: white;display: inline-block;border-radius:5px;cursor: pointer;box-shadow: 0 1px 3px 0 rgba(0,0,0,.25);\"><a style=\"text-decoration: none;color: #137752;\" href=\"'+ url + '\" target=\"_blank\">'+buttonTag+'</a></div>');\n    }\n  }\n  );\n}\n);\n</script>"
+                        "value": "<script>\n$(document).ready(function(){\n  var merchantId ='{{openpay_merchant_id}}';\n  var isSandbox = 'true' === '{{openpay_sandbox_mode}}';\n  var orderId = window.location.search.replace('?og=', '');\n  $.get('/api/checkout/pub/orders/order-group/' + orderId, function(data, status){\n    if (data.length>0 && data[0].paymentData.transactions.length > 0 && data[0].paymentData.transactions[0].payments.length > 0) {\n      var pago = data[0].paymentData.transactions[0].payments[0];\n      var tipoPago = pago.paymentSystemName;\n      var orderData = pago.connectorResponses;\n      var tid= orderData.Tid;\n      var nsu= orderData.nsu;\n      var isSpei = 'SPEI' === tipoPago;\n      if (tid == nsu){\n        console.log('Openpay no reference url');\n        return;\n      }\n\n      console.log('Openpay isSandbox: ' + isSandbox);\n      console.log('Openpay payment tid: ' + tid);\n      console.log('Openpay payment nsu: ' + nsu);\n      console.log('Openpay payment isSpei: ' + isSpei);\n\n      var host = 'https://dashboard.openpay.mx';\n      if (isSandbox) {\n        host = 'https://sandbox-dashboard.openpay.mx';\n      }\n\n      var url = host + '/paynet-pdf/' + merchantId + '/' + tid;\n      if (isSpei) {\n        url = host + '/spei-pdf/' + merchantId + '/' + nsu;\n      }\n      console.log('Url referenceOpenPay: ' + url);\n      var buttonTag = \"Descarga tu PDF para realizar el pago\";\n      $('.fl.w-100.w-100-ns').append('<div class=\"openpay-referencia\" style=\"padding: 10px 20px;margin-top: 10px;background: white;display: inline-block;border-radius:5px;cursor: pointer;box-shadow: 0 1px 3px 0 rgba(0,0,0,.25);\"><a style=\"text-decoration: none;color: #137752;\" href=\"'+ url + '\" target=\"_blank\">'+buttonTag+'</a></div>');\n    }\n  }\n  );\n}\n);\n</script>"
                     },
                     {
                         "type": "BOOLEAN",
@@ -65,7 +65,7 @@
                         "value": "true"
                     }
                 ],
-                "fingerprint": "1579627734719",
+                "fingerprint": "1579717725997",
                 "firingTriggerId": [
                     "7"
                 ],
@@ -249,7 +249,7 @@
                 "name": "Container Version"
             }
         ],
-        "fingerprint": "1579627756949",
-        "tagManagerUrl": "https://tagmanager.google.com/#/versions/accounts/4702907809/containers/13043242/versions/43?apiLink=version"
+        "fingerprint": "1579717736588",
+        "tagManagerUrl": "https://tagmanager.google.com/#/versions/accounts/4702907809/containers/13043242/versions/45?apiLink=version"
     }
 }
