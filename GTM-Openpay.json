@@ -1,12 +1,12 @@
 {
     "exportFormatVersion": 2,
-    "exportTime": "2020-01-22 18:29:09",
+    "exportTime": "2020-04-14 17:09:24",
     "containerVersion": {
-        "path": "accounts/4702907809/containers/13043242/versions/45",
+        "path": "accounts/4702907809/containers/13043242/versions/138",
         "accountId": "4702907809",
         "containerId": "13043242",
-        "containerVersionId": "45",
-        "name": "test",
+        "containerVersionId": "138",
+        "name": "GTM VTEX Openpay",
         "container": {
             "path": "accounts/4702907809/containers/13043242",
             "accountId": "4702907809",
@@ -23,7 +23,34 @@
             {
                 "accountId": "4702907809",
                 "containerId": "13043242",
-                "tagId": "2",
+                "tagId": "72",
+                "name": "Openpay-PaymentReference",
+                "type": "html",
+                "parameter": [
+                    {
+                        "type": "TEMPLATE",
+                        "key": "html",
+                        "value": "<script>\n$(document).ready(function(){\n    var alertPaymentDeclined = function(){\n        $('#app-top').find('h1').text('Pago no completado')\n        $('#app-top').find('.cconf-alert').empty();\n        $('#app-top').find('.cconf-alert').removeClass('bg-washed-green b--green');\n        $('#app-top').find('.cconf-alert').addClass('bg-washed-red b--red');\n        \n        $('#app-top').find('.cconf-alert').append('<div class=\"fl w-100 w-100-ns\" style=\"overflow-wrap: break-word;\"><span class=\"db f4 fw6 mb4 dark\"><span>Su transacción fue rechazada!</span></span><p class=\"dark\"><span>Su banco rechazo el pago, el pedido no puede ser procesado por el comercio.</span></p><p class=\"dark\"><span>Intente su pago nuevamente.</span></p></div>');\n    }\n      var showPdfButton = function (isSandbox, merchantId, tid, nsu, tipoPago, isSpei){\n      var host = 'https://dashboard.openpay.mx';\n      if (isSandbox) {\n        host = 'https://sandbox-dashboard.openpay.mx';\n      }\n      var url = host + '/paynet-pdf/' + merchantId + '/' + tid;\n      if (isSpei) {\n        url = host + '/spei-pdf/' + merchantId + '/' + nsu;\n      }\n      console.log('Url referenceOpenPay: ' + url);\n      var buttonTag = \"Imprimir PDF de \" + tipoPago;\n      $('#checkout-confirmation-top').append('<div class=\"openpay-referencia ph3-ns w-70-ns center\"><div style=\"padding: 10px 20px;margin-top: 10px;background: white;display: inline-block;border-radius:5px;cursor: pointer;box-shadow: 0 1px 3px 0 rgba(0,0,0,.25);\"><a style=\"text-decoration: none;color: #137752;\" href=\"'+ url + '\" target=\"_blank\">'+buttonTag+'</a></div></div>');\n    }\n  \n    var initOrderData = function() {\n        var merchantId ='{{openpay_merchant_id}}';\n        var isSandbox = 'true' === '{{openpay_sandbox_mode}}';\n        var orderId = window.location.search.replace('?og=', '');\n        $.get('/api/checkout/pub/orders/order-group/' + orderId, function(data, status){\n            if (data.length>0 && data[0].paymentData.transactions.length > 0 && data[0].paymentData.transactions[0].payments.length > 0) {\n              var pago = data[0].paymentData.transactions[0].payments[0];\n              var tipoPago = pago.paymentSystemName;\n              var orderData = pago.connectorResponses;\n              var messageStatus = orderData.Message;\n              var tid= orderData.Tid;\n              var nsu= orderData.nsu;\n              var isSpei = 'SPEI' === tipoPago;\n\n              if(messageStatus === \"Pending for confirm\"){\n                alertPaymentDeclined();\n              } else if (tid !== nsu){\n              \tshowPdfButton(isSandbox, merchantId, tid, nsu, tipoPago, isSpei);\n              } else {\n                console.log('Openpay no reference url');\n              }\n            }\n        });\n    }\n    initOrderData();\n});\n</script>"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "supportDocumentWrite",
+                        "value": "false"
+                    }
+                ],
+                "fingerprint": "1586883920468",
+                "firingTriggerId": [
+                    "70"
+                ],
+                "tagFiringOption": "ONCE_PER_EVENT",
+                "monitoringMetadata": {
+                    "type": "MAP"
+                }
+            },
+            {
+                "accountId": "4702907809",
+                "containerId": "13043242",
+                "tagId": "75",
                 "name": "Openpay-DeviceSessionId",
                 "type": "html",
                 "parameter": [
@@ -38,36 +65,9 @@
                         "value": "false"
                     }
                 ],
-                "fingerprint": "1579627018892",
+                "fingerprint": "1586464337597",
                 "firingTriggerId": [
-                    "5"
-                ],
-                "tagFiringOption": "ONCE_PER_EVENT",
-                "monitoringMetadata": {
-                    "type": "MAP"
-                }
-            },
-            {
-                "accountId": "4702907809",
-                "containerId": "13043242",
-                "tagId": "3",
-                "name": "Openpay-PaymentReference",
-                "type": "html",
-                "parameter": [
-                    {
-                        "type": "TEMPLATE",
-                        "key": "html",
-                        "value": "<script>\n$(document).ready(function(){\n  var merchantId ='{{openpay_merchant_id}}';\n  var isSandbox = 'true' === '{{openpay_sandbox_mode}}';\n  var orderId = window.location.search.replace('?og=', '');\n  $.get('/api/checkout/pub/orders/order-group/' + orderId, function(data, status){\n    if (data.length>0 && data[0].paymentData.transactions.length > 0 && data[0].paymentData.transactions[0].payments.length > 0) {\n      var pago = data[0].paymentData.transactions[0].payments[0];\n      var tipoPago = pago.paymentSystemName;\n      var orderData = pago.connectorResponses;\n      var tid= orderData.Tid;\n      var nsu= orderData.nsu;\n      var isSpei = 'SPEI' === tipoPago;\n      if (tid == nsu){\n        console.log('Openpay no reference url');\n        return;\n      }\n\n      console.log('Openpay isSandbox: ' + isSandbox);\n      console.log('Openpay payment tid: ' + tid);\n      console.log('Openpay payment nsu: ' + nsu);\n      console.log('Openpay payment isSpei: ' + isSpei);\n\n      var host = 'https://dashboard.openpay.mx';\n      if (isSandbox) {\n        host = 'https://sandbox-dashboard.openpay.mx';\n      }\n\n      var url = host + '/paynet-pdf/' + merchantId + '/' + tid;\n      if (isSpei) {\n        url = host + '/spei-pdf/' + merchantId + '/' + nsu;\n      }\n      console.log('Url referenceOpenPay: ' + url);\n      var buttonTag = \"Descarga tu PDF para realizar el pago\";\n      $('.fl.w-100.w-100-ns').append('<div class=\"openpay-referencia\" style=\"padding: 10px 20px;margin-top: 10px;background: white;display: inline-block;border-radius:5px;cursor: pointer;box-shadow: 0 1px 3px 0 rgba(0,0,0,.25);\"><a style=\"text-decoration: none;color: #137752;\" href=\"'+ url + '\" target=\"_blank\">'+buttonTag+'</a></div>');\n    }\n  }\n  );\n}\n);\n</script>"
-                    },
-                    {
-                        "type": "BOOLEAN",
-                        "key": "supportDocumentWrite",
-                        "value": "true"
-                    }
-                ],
-                "fingerprint": "1579717725997",
-                "firingTriggerId": [
-                    "7"
+                    "73"
                 ],
                 "tagFiringOption": "ONCE_PER_EVENT",
                 "monitoringMetadata": {
@@ -79,50 +79,8 @@
             {
                 "accountId": "4702907809",
                 "containerId": "13043242",
-                "triggerId": "5",
-                "name": "Openpay-DeviceSessionId",
-                "type": "CUSTOM_EVENT",
-                "customEventFilter": [
-                    {
-                        "type": "EQUALS",
-                        "parameter": [
-                            {
-                                "type": "TEMPLATE",
-                                "key": "arg0",
-                                "value": "{{_event}}"
-                            },
-                            {
-                                "type": "TEMPLATE",
-                                "key": "arg1",
-                                "value": ".*"
-                            }
-                        ]
-                    }
-                ],
-                "filter": [
-                    {
-                        "type": "CONTAINS",
-                        "parameter": [
-                            {
-                                "type": "TEMPLATE",
-                                "key": "arg0",
-                                "value": "{{Event}}"
-                            },
-                            {
-                                "type": "TEMPLATE",
-                                "key": "arg1",
-                                "value": "payment"
-                            }
-                        ]
-                    }
-                ],
-                "fingerprint": "1579626872771"
-            },
-            {
-                "accountId": "4702907809",
-                "containerId": "13043242",
-                "triggerId": "7",
-                "name": "Vtex-Event.GA_Event_orderplaced",
+                "triggerId": "70",
+                "name": "Openpay-PaymentReferenceTrigger",
                 "type": "CUSTOM_EVENT",
                 "customEventFilter": [
                     {
@@ -158,46 +116,56 @@
                         ]
                     }
                 ],
-                "fingerprint": "1569879701545"
+                "fingerprint": "1586882007941"
+            },
+            {
+                "accountId": "4702907809",
+                "containerId": "13043242",
+                "triggerId": "73",
+                "name": "Openpay-DeviceSessionId",
+                "type": "CUSTOM_EVENT",
+                "customEventFilter": [
+                    {
+                        "type": "MATCH_REGEX",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{_event}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": ".*"
+                            }
+                        ]
+                    }
+                ],
+                "filter": [
+                    {
+                        "type": "CONTAINS",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{Event}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": "payment"
+                            }
+                        ]
+                    }
+                ],
+                "fingerprint": "1586464440552"
             }
         ],
         "variable": [
             {
                 "accountId": "4702907809",
                 "containerId": "13043242",
-                "variableId": "1",
-                "name": "openpay_merchant_id",
-                "type": "c",
-                "parameter": [
-                    {
-                        "type": "TEMPLATE",
-                        "key": "value",
-                        "value": "mxxxxxxxxxxxxxxxxxxx"
-                    }
-                ],
-                "fingerprint": "1579626914624",
-                "formatValue": {}
-            },
-            {
-                "accountId": "4702907809",
-                "containerId": "13043242",
-                "variableId": "4",
-                "name": "openpay_public_key",
-                "type": "c",
-                "parameter": [
-                    {
-                        "type": "TEMPLATE",
-                        "key": "value",
-                        "value": "pk_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-                    }
-                ],
-                "fingerprint": "1579626969746",
-                "formatValue": {}
-            },
-            {
-                "accountId": "4702907809",
-                "containerId": "13043242",
-                "variableId": "5",
+                "variableId": "61",
                 "name": "openpay_sandbox_mode",
                 "type": "c",
                 "parameter": [
@@ -207,7 +175,39 @@
                         "value": "true"
                     }
                 ],
-                "fingerprint": "1579626954666",
+                "fingerprint": "1586463833730",
+                "formatValue": {}
+            },
+            {
+                "accountId": "4702907809",
+                "containerId": "13043242",
+                "variableId": "71",
+                "name": "openpay_merchant_id",
+                "type": "c",
+                "parameter": [
+                    {
+                        "type": "TEMPLATE",
+                        "key": "value",
+                        "value": "maopehmmdk0ge1o2jqy7"
+                    }
+                ],
+                "fingerprint": "1586467005036",
+                "formatValue": {}
+            },
+            {
+                "accountId": "4702907809",
+                "containerId": "13043242",
+                "variableId": "74",
+                "name": "openpay_public_key",
+                "type": "c",
+                "parameter": [
+                    {
+                        "type": "TEMPLATE",
+                        "key": "value",
+                        "value": "pk_f3052ca5ceec43819423a1f2d5900b8a"
+                    }
+                ],
+                "fingerprint": "1586467016721",
                 "formatValue": {}
             }
         ],
@@ -249,7 +249,7 @@
                 "name": "Container Version"
             }
         ],
-        "fingerprint": "1579717736588",
-        "tagManagerUrl": "https://tagmanager.google.com/#/versions/accounts/4702907809/containers/13043242/versions/45?apiLink=version"
+        "fingerprint": "1586884004987",
+        "tagManagerUrl": "https://tagmanager.google.com/#/versions/accounts/4702907809/containers/13043242/versions/138?apiLink=version"
     }
 }
