@@ -1,11 +1,11 @@
 {
     "exportFormatVersion": 2,
-    "exportTime": "2020-04-14 17:09:24",
+    "exportTime": "2020-04-14 17:55:21",
     "containerVersion": {
-        "path": "accounts/4702907809/containers/13043242/versions/138",
+        "path": "accounts/4702907809/containers/13043242/versions/139",
         "accountId": "4702907809",
         "containerId": "13043242",
-        "containerVersionId": "138",
+        "containerVersionId": "139",
         "name": "GTM VTEX Openpay",
         "container": {
             "path": "accounts/4702907809/containers/13043242",
@@ -188,10 +188,10 @@
                     {
                         "type": "TEMPLATE",
                         "key": "value",
-                        "value": "maopehmmdk0ge1o2jqy7"
+                        "value": "mxxxxxxxxxxxxxxxxxxx"
                     }
                 ],
-                "fingerprint": "1586467005036",
+                "fingerprint": "1586886865644",
                 "formatValue": {}
             },
             {
@@ -204,10 +204,10 @@
                     {
                         "type": "TEMPLATE",
                         "key": "value",
-                        "value": "pk_f3052ca5ceec43819423a1f2d5900b8a"
+                        "value": "pk_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
                     }
                 ],
-                "fingerprint": "1586467016721",
+                "fingerprint": "1586886879628",
                 "formatValue": {}
             }
         ],
@@ -249,7 +249,7 @@
                 "name": "Container Version"
             }
         ],
-        "fingerprint": "1586884004987",
-        "tagManagerUrl": "https://tagmanager.google.com/#/versions/accounts/4702907809/containers/13043242/versions/138?apiLink=version"
+        "fingerprint": "1586886902677",
+        "tagManagerUrl": "https://tagmanager.google.com/#/versions/accounts/4702907809/containers/13043242/versions/139?apiLink=version"
     }
 }
