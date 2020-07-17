@@ -1,11 +1,11 @@
 {
     "exportFormatVersion": 2,
-    "exportTime": "2020-04-14 17:55:21",
+    "exportTime": "2020-07-17 23:01:24",
     "containerVersion": {
-        "path": "accounts/4702907809/containers/13043242/versions/139",
+        "path": "accounts/4702907809/containers/13043242/versions/144",
         "accountId": "4702907809",
         "containerId": "13043242",
-        "containerVersionId": "139",
+        "containerVersionId": "144",
         "name": "GTM VTEX Openpay",
         "container": {
             "path": "accounts/4702907809/containers/13043242",
@@ -57,7 +57,7 @@
                     {
                         "type": "TEMPLATE",
                         "key": "html",
-                        "value": "<script src=\"https://openpay.s3.amazonaws.com/openpay.v1.min.js\"></script>\n<script src=\"https://openpay.s3.amazonaws.com/openpay-data.v1.min.js\"></script>\n<script>\n\n$(document).ready(function() {\n      vtexjs.checkout.getOrderForm().done(function(orderForm){\n      OpenPay.setId('{{openpay_merchant_id}}');\n      OpenPay.setApiKey('{{openpay_public_key}}');\n      OpenPay.setSandboxMode({{openpay_sandbox_mode}});\n      var deviceSessionIdOpenPay = OpenPay.deviceData.setup();\n      console.log('deviceSessionIdOpenPay', deviceSessionIdOpenPay);\n      window.vtex.deviceFingerprint = deviceSessionIdOpenPay;\n\t});\n});\n</script>"
+                        "value": "<script src=\"https://openpay.s3.amazonaws.com/openpay.v1.min.js\"></script>\n<script src=\"https://openpay.s3.amazonaws.com/openpay-data.v1.min.js\"></script>\n<script>\n\n$(document).ready(function() {\n      vtexjs.checkout.getOrderForm().done(function(orderForm){\n      var sandboxMode = ('{{openpay_sandbox_mode}}' === 'true');\n      OpenPay.setId('{{openpay_merchant_id}}');\n      OpenPay.setApiKey('{{openpay_public_key}}');\n      OpenPay.setSandboxMode(sandboxMode);\n      var deviceSessionIdOpenPay = OpenPay.deviceData.setup();\n      console.log('deviceSessionIdOpenPay', deviceSessionIdOpenPay);\n      window.vtex.deviceFingerprint = deviceSessionIdOpenPay;\n\t});\n});\n</script>"
                     },
                     {
                         "type": "BOOLEAN",
@@ -65,7 +65,7 @@
                         "value": "false"
                     }
                 ],
-                "fingerprint": "1586464337597",
+                "fingerprint": "1595026679997",
                 "firingTriggerId": [
                     "73"
                 ],
@@ -175,7 +175,7 @@
                         "value": "true"
                     }
                 ],
-                "fingerprint": "1586463833730",
+                "fingerprint": "1595026835997",
                 "formatValue": {}
             },
             {
@@ -191,7 +191,7 @@
                         "value": "mxxxxxxxxxxxxxxxxxxx"
                     }
                 ],
-                "fingerprint": "1586886865644",
+                "fingerprint": "1595026796277",
                 "formatValue": {}
             },
             {
@@ -207,7 +207,7 @@
                         "value": "pk_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
                     }
                 ],
-                "fingerprint": "1586886879628",
+                "fingerprint": "1595026828297",
                 "formatValue": {}
             }
         ],
@@ -249,7 +249,7 @@
                 "name": "Container Version"
             }
         ],
-        "fingerprint": "1586886902677",
-        "tagManagerUrl": "https://tagmanager.google.com/#/versions/accounts/4702907809/containers/13043242/versions/139?apiLink=version"
+        "fingerprint": "1595026866815",
+        "tagManagerUrl": "https://tagmanager.google.com/#/versions/accounts/4702907809/containers/13043242/versions/144?apiLink=version"
     }
 }
