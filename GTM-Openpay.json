@@ -1,13 +1,13 @@
 {
     "exportFormatVersion": 2,
-    "exportTime": "2020-12-04 01:25:15",
+    "exportTime": "2021-04-08 00:19:00",
     "containerVersion": {
-        "path": "accounts/4702907809/containers/13043242/versions/145",
+        "path": "accounts/4702907809/containers/13043242/versions/148",
         "accountId": "4702907809",
         "containerId": "13043242",
-        "containerVersionId": "145",
-        "name": "Soporte para pago en tiendas Colombia",
-        "description": "Se agrega un campo para seleccionar el país de origen del comercio MX/CO.",
+        "containerVersionId": "148",
+        "name": "GTM VTEX Openpay",
+        "description": "Actualización de leyendas en la página de confirmación (Método de pago SPEI).",
         "container": {
             "path": "accounts/4702907809/containers/13043242",
             "accountId": "4702907809",
@@ -31,7 +31,7 @@
                     {
                         "type": "TEMPLATE",
                         "key": "html",
-                        "value": "<script>\n$(document).ready(function(){\n    var alertPaymentDeclined = function(){\n        $('#app-top').find('h1').text('Pago no completado');\n        $('#app-top').find('.cconf-alert').empty();\n        $('#app-top').find('.cconf-alert').removeClass('bg-washed-green b--green');\n        $('#app-top').find('.cconf-alert').addClass('bg-washed-red b--red');\n        \n        $('#app-top').find('.cconf-alert').append('<div class=\"fl w-100 w-100-ns\" style=\"overflow-wrap: break-word;\"><span class=\"db f4 fw6 mb4 dark\"><span>Su transacción fue rechazada!</span></span><p class=\"dark\"><span>Su banco rechazo el pago, el pedido no puede ser procesado por el comercio.</span></p><p class=\"dark\"><span>Intente su pago nuevamente.</span></p></div>');\n    }\n    var showPdfButton = function (host, merchantId, tid, nsu, tipoPago, isSpei){\n        var url = host + '/paynet-pdf/' + merchantId + '/' + tid;\n        if (isSpei) {\n            url = host + '/spei-pdf/' + merchantId + '/' + nsu;\n        }\n        console.log('Url referenceOpenPay: ' + url);\n        var buttonTag = \"Imprimir PDF de \" + tipoPago;\n        $('#checkout-confirmation-top').append('<div class=\"openpay-referencia ph3-ns w-70-ns center\"><div style=\"padding: 10px 20px;margin-top: 10px;background: white;display: inline-block;border-radius:5px;cursor: pointer;box-shadow: 0 1px 3px 0 rgba(0,0,0,.25);\"><a style=\"text-decoration: none;color: #137752;\" href=\"'+ url + '\" target=\"_blank\">'+buttonTag+'</a></div></div>');\n    }\n  \n    var initOrderData = function() {\n        var merchantId ='{{openpay_merchant_id}}';\n        var country ='{{openpay_country}}';\n        var isSandbox = 'true' === '{{openpay_sandbox_mode}}';\n        var orderId = window.location.search.replace('?og=', '');\n\n        var hostMx = (isSandbox) ? 'https://sandbox-dashboard.openpay.mx' : 'https://dashboard.openpay.mx';\n        var hostCo = (isSandbox) ? 'https://sandbox-dashboard.openpay.co' : 'https://dashboard.openpay.co';\n        var host = (country == 'MX') ? hostMx : hostCo;\n\n        $.get('/api/checkout/pub/orders/order-group/' + orderId, function(data, status){\n            if (data.length>0 && data[0].paymentData.transactions.length > 0 && data[0].paymentData.transactions[0].payments.length > 0) {\n                var pago = data[0].paymentData.transactions[0].payments[0];\n                var tipoPago = pago.paymentSystemName;\n                var orderData = pago.connectorResponses;\n                var messageStatus = orderData.Message;\n                var tid= orderData.Tid;\n                var nsu= orderData.nsu;\n                var isSpei = 'SPEI' === tipoPago;\n                var acquier = pago.connectorResponses.acquirer;\n              \n                if (acquier === \"Openpay\"){\n                    if(messageStatus === \"Pending for confirm\"){\n                        alertPaymentDeclined();\n                    } else if (tid !== nsu){\n                        showPdfButton(host, merchantId, tid, nsu, tipoPago, isSpei);\n                    } else {\n                        console.log('Openpay no reference url');\n                    }\n                }\n            }\n        });\n    }\n    setTimeout(initOrderData(),2000);\n});\n</script>"
+                        "value": "<script>\n$(document).ready(function(){\n    var alertPaymentDeclined = function(){\n        $('#app-top').find('h1').text('Pago no completado');\n        $('#app-top').find('.cconf-alert').empty();\n        $('#app-top').find('.cconf-alert').removeClass('bg-washed-green b--green');\n        $('#app-top').find('.cconf-alert').addClass('bg-washed-red b--red');\n        \n        $('#app-top').find('.cconf-alert').append('<div class=\"fl w-100 w-100-ns\" style=\"overflow-wrap: break-word;\"><span class=\"db f4 fw6 mb4 dark\"><span>Su transacción fue rechazada!</span></span><p class=\"dark\"><span>Su banco rechazo el pago, el pedido no puede ser procesado por el comercio.</span></p><p class=\"dark\"><span>Intente su pago nuevamente.</span></p></div>');\n    }\n    var showPdfButton = function (host, merchantId, tid, nsu, tipoPago, isSpei){\n        var url = host + '/paynet-pdf/' + merchantId + '/' + tid;\n        $('#app-top').find('h1').text('Pedido en Proceso')\n        if (isSpei) {\n            url = host + '/spei-pdf/' + merchantId + '/' + nsu;\n            $('#app-top').find('.cconf-alert').empty()\n            $('#app-top').find('.cconf-alert').append('<div class=\"fl w-100 w-100-ns\" style=\"overflow-wrap: break-word;\"><span class=\"db f4 fw6 mb4 dark-green\"><span>¡Realiza tu transferencia y confirma tu pedido!</span></span><p class=\"dark-green\"><span>Imprime o guarda tu recibo en el botón <strong>\"Imprimir PDF de SPEI\"</strong>, sigue las instrucciones paso a paso y realiza tu SPEI a través de tu app o portal bancario.</span></p></div>');\n        }\n        console.log('Url referenceOpenPay: ' + url);\n        var buttonTag = \"Imprimir PDF de \" + tipoPago;\n        $('#checkout-confirmation-top').append('<div class=\"openpay-referencia ph3-ns w-70-ns center\"><div style=\"padding: 10px 20px;margin-top: 10px;background: white;display: inline-block;border-radius:5px;cursor: pointer;box-shadow: 0 1px 3px 0 rgba(0,0,0,.25);\"><a style=\"text-decoration: none;color: #137752;\" href=\"'+ url + '\" target=\"_blank\">'+buttonTag+'</a></div></div>');\n    }\n  \n    var initOrderData = function() {\n        var merchantId ='{{openpay_merchant_id}}';\n        var country ='{{openpay_country}}';\n        var isSandbox = 'true' === '{{openpay_sandbox_mode}}';\n        var orderId = window.location.search.replace('?og=', '');\n\n        var hostMx = (isSandbox) ? 'https://sandbox-dashboard.openpay.mx' : 'https://dashboard.openpay.mx';\n        var hostCo = (isSandbox) ? 'https://sandbox-dashboard.openpay.co' : 'https://dashboard.openpay.co';\n        var host = (country == 'MX') ? hostMx : hostCo;\n\n        $.get('/api/checkout/pub/orders/order-group/' + orderId, function(data, status){\n            if (data.length>0 && data[0].paymentData.transactions.length > 0 && data[0].paymentData.transactions[0].payments.length > 0) {\n                var pago = data[0].paymentData.transactions[0].payments[0];\n                var tipoPago = pago.paymentSystemName;\n                var orderData = pago.connectorResponses;\n                var messageStatus = orderData.Message;\n                var tid= orderData.Tid;\n                var nsu= orderData.nsu;\n                var isSpei = 'SPEI' === tipoPago;\n                var acquier = pago.connectorResponses.acquirer;\n              \n                if (acquier === \"Openpay\"){\n                    if(messageStatus === \"Pending for confirm\"){\n                        alertPaymentDeclined();\n                    } else if (tid !== nsu){\n                        showPdfButton(host, merchantId, tid, nsu, tipoPago, isSpei);\n                    } else {\n                        console.log('Openpay no reference url');\n                    }\n                }\n            }\n        });\n    }\n    setTimeout(initOrderData(),2000);\n});\n</script>"
                     },
                     {
                         "type": "BOOLEAN",
@@ -39,7 +39,7 @@
                         "value": "false"
                     }
                 ],
-                "fingerprint": "1607044610335",
+                "fingerprint": "1617840591485",
                 "firingTriggerId": [
                     "70"
                 ],
@@ -117,7 +117,7 @@
                         ]
                     }
                 ],
-                "fingerprint": "1586882007941"
+                "fingerprint": "1617841080889"
             },
             {
                 "accountId": "4702907809",
@@ -224,7 +224,7 @@
                         "value": "MX"
                     }
                 ],
-                "fingerprint": "1607043038020",
+                "fingerprint": "1607101718272",
                 "formatValue": {}
             }
         ],
@@ -266,7 +266,7 @@
                 "name": "Container Version"
             }
         ],
-        "fingerprint": "1607044737985",
-        "tagManagerUrl": "https://tagmanager.google.com/#/versions/accounts/4702907809/containers/13043242/versions/145?apiLink=version"
+        "fingerprint": "1617841121718",
+        "tagManagerUrl": "https://tagmanager.google.com/#/versions/accounts/4702907809/containers/13043242/versions/148?apiLink=version"
     }
 }
