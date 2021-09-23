@@ -1,13 +1,13 @@
 {
     "exportFormatVersion": 2,
-    "exportTime": "2021-04-08 00:19:00",
+    "exportTime": "2021-09-23 22:32:54",
     "containerVersion": {
-        "path": "accounts/4702907809/containers/13043242/versions/148",
+        "path": "accounts/4702907809/containers/13043242/versions/149",
         "accountId": "4702907809",
         "containerId": "13043242",
-        "containerVersionId": "148",
+        "containerVersionId": "149",
         "name": "GTM VTEX Openpay",
-        "description": "Actualización de leyendas en la página de confirmación (Método de pago SPEI).",
+        "description": "Customización en la descripción para metodo de pago PSE",
         "container": {
             "path": "accounts/4702907809/containers/13043242",
             "accountId": "4702907809",
@@ -46,6 +46,9 @@
                 "tagFiringOption": "ONCE_PER_EVENT",
                 "monitoringMetadata": {
                     "type": "MAP"
+                },
+                "consentSettings": {
+                    "consentStatus": "NOT_SET"
                 }
             },
             {
@@ -73,6 +76,39 @@
                 "tagFiringOption": "ONCE_PER_EVENT",
                 "monitoringMetadata": {
                     "type": "MAP"
+                },
+                "consentSettings": {
+                    "consentStatus": "NOT_SET"
+                }
+            },
+            {
+                "accountId": "4702907809",
+                "containerId": "13043242",
+                "tagId": "77",
+                "name": "Openpay-PseDescription",
+                "type": "html",
+                "parameter": [
+                    {
+                        "type": "TEMPLATE",
+                        "key": "html",
+                        "value": "<style>\n.op-spei {\n    border-radius: 13px;\n    color: #3e4956;\n    font-weight: 300;\n    margin: 0;\n    padding: 0;\n    width: 100%;\n    font-family: \"Montserrat\";\n}\n.op-spei .op-spei__header > h3 {\n    display: block;\n    font-size: 16px;\n    font-weight: 700;\n    text-align: center;\n}\n.op-spei .op-spei__steps {\n    margin: 15px;\n}\n.op-spei .op-spei__steps > h4 {\n    font-size: 13px;\n    text-align: center;\n}\n.op-spei .op-spei__row {\n    display: grid;\n    justify-content: space-between;\n    grid-template-columns: 30% 30% 30%;\n}\n.op-spei .op-spei__col {\n    text-align: center;\n}\n.op-spei  .op-spei__image > img{\n    max-width: 90%;\n}\n.op-spei .op-spei__txt{\n    font-size: 12px;\n    line-height: 1.3em;\n    margin-top: 5px;\n}\n.op-spei .op-spei__footer > p {\n    display: flex;\n    justify-content: center;\n    align-items: center;\n    font-size: 11px;\n}\n.op-spei .op-spei__footer > p img {\n    width: 50px;\n    margin-left: 10px;\n}\n</style>\n<script>\n$(document).ready(function() { \n  var eventExecution = true;\n  $(window).on('orderFormUpdated.vtex', function (evt, orderForm) {\n    var payment = orderForm.paymentData.payments[0];\n    var paymentId = payment.paymentSystem;\n    var paymentMethods = orderForm.paymentData.paymentSystems;\n    if(eventExecution){\n      addPaymentMethodDescription(paymentMethods);\n      eventExecution = false;\n    }\n});\n  function addPaymentMethodDescription(paymentMethods) {\n    var i = null;\n    for (i = 0; paymentMethods.length > i; i += 1) {\n      if (paymentMethods[i].name == \"PSE\") {\n            $('.custom'+paymentMethods[i].id+'PaymentGroupPaymentGroup').html(\n                '<section class=\"op-spei\"> <div class=\"op-spei__header\"> <h3>Realiza tu pago a través de PSE</h3> </div><div class=\"op-spei__steps\" style=\"text-align: center;\"><img style=\"margin:0 0 1rem 0;\" src=\"https://img.openpay.mx/plugins/logo_pse.png\" alt=\"PSE\"><p>PSE es un servicio que te permite realizar compras o pagos debitando de tu cuenta de ahorros, corriente o deposito electrónico.</p></div><div class=\"op-spei__footer\"> <p><span>Tus pagos son procesados por </span><img src=\"https://i.postimg.cc/d0nvbBBg/logo-openpay.png\" alt=\"Openpay Logo\"></p></div></section>');\n      }\n    }\n  };\n});\n</script>"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "supportDocumentWrite",
+                        "value": "false"
+                    }
+                ],
+                "fingerprint": "1632436118703",
+                "firingTriggerId": [
+                    "73"
+                ],
+                "tagFiringOption": "ONCE_PER_EVENT",
+                "monitoringMetadata": {
+                    "type": "MAP"
+                },
+                "consentSettings": {
+                    "consentStatus": "NOT_SET"
                 }
             }
         ],
@@ -221,7 +257,7 @@
                     {
                         "type": "TEMPLATE",
                         "key": "value",
-                        "value": "MX"
+                        "value": "CO"
                     }
                 ],
                 "fingerprint": "1607101718272",
@@ -266,7 +302,7 @@
                 "name": "Container Version"
             }
         ],
-        "fingerprint": "1617841121718",
-        "tagManagerUrl": "https://tagmanager.google.com/#/versions/accounts/4702907809/containers/13043242/versions/148?apiLink=version"
+        "fingerprint": "1632436283155",
+        "tagManagerUrl": "https://tagmanager.google.com/#/versions/accounts/4702907809/containers/13043242/versions/149?apiLink=version"
     }
 }
