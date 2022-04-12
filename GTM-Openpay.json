@@ -1,11 +1,13 @@
 {
     "exportFormatVersion": 2,
-    "exportTime": "2021-12-21 16:59:44",
+    "exportTime": "2022-04-12 16:29:39",
     "containerVersion": {
-        "path": "accounts/4702907809/containers/13043242/versions/155",
+        "path": "accounts/4702907809/containers/13043242/versions/156",
         "accountId": "4702907809",
         "containerId": "13043242",
-        "containerVersionId": "155",
+        "containerVersionId": "156",
+        "name": "Openpay vtex",
+        "description": "Soporte para generar el DeviceSessionId en Mx, Co y Pe",
         "container": {
             "path": "accounts/4702907809/containers/13043242",
             "accountId": "4702907809",
@@ -16,7 +18,8 @@
                 "WEB"
             ],
             "fingerprint": "1579628229585",
-            "tagManagerUrl": "https://tagmanager.google.com/#/container/accounts/4702907809/containers/13043242/workspaces?apiLink=container"
+            "tagManagerUrl": "https://tagmanager.google.com/#/container/accounts/4702907809/containers/13043242/workspaces?apiLink=container",
+            "mode": "FULL"
         },
         "tag": [
             {
@@ -59,7 +62,7 @@
                     {
                         "type": "TEMPLATE",
                         "key": "html",
-                        "value": "<script src=\"https://openpay.s3.amazonaws.com/openpay.v1.min.js\"></script>\n<script src=\"https://openpay.s3.amazonaws.com/openpay-data.v1.min.js\"></script>\n<script>\n\n$(document).ready(function() {\n    var sandboxMode = ('{{openpay_sandbox_mode}}' === 'true');\n    OpenPay.setId('{{openpay_merchant_id}}');\n    OpenPay.setApiKey('{{openpay_public_key}}');\n    OpenPay.setSandboxMode(sandboxMode);\n    var deviceSessionIdOpenPay = OpenPay.deviceData.setup();\n    console.log('deviceSessionIdOpenPay', deviceSessionIdOpenPay);\n    window.vtex.deviceFingerprint = deviceSessionIdOpenPay;\n});\n</script>"
+                        "value": "<script>\n    var head = document.getElementsByTagName('head')[0];\n    var scriptOpenpay = document.createElement('script');\n    var country ='{{openpay_country}}';\n    console.log(country);\n    var baseUrl = getScriptBaseUrlByCountry(country);\n    scriptOpenpay.type = 'text/javascript';\n    scriptOpenpay.onload = function() {\n        loadScriptData();\n    }\n\n    scriptOpenpay.src = baseUrl + \"/openpay.v1.min.js\";\n    head.appendChild(scriptOpenpay);\n\n    function loadScriptData() {\n        var scriptData = document.createElement(\"script\");\n        scriptData.type=\"text/javascript\";\n        scriptData.src = baseUrl + \"/openpay-data.v1.min.js\";\n        scriptData.onload = function() {\n            generateDeviceSession();\n        }\n        head.appendChild(scriptData);\n    }\n\n    function generateDeviceSession() {\n        var sandboxMode = ('{{openpay_sandbox_mode}}' === 'true');\n        OpenPay.setId('{{openpay_merchant_id}}');\n        OpenPay.setApiKey('{{openpay_public_key}}');\n        OpenPay.setSandboxMode(sandboxMode);\n        var deviceSessionIdOpenPay = OpenPay.deviceData.setup();\n        console.log('deviceSessionIdOpenPay', deviceSessionIdOpenPay);\n        window.vtex.deviceFingerprint = deviceSessionIdOpenPay;\n    }\n\n    function getScriptBaseUrlByCountry(countryCode) {\n        var scriptBaseUrl = [\n            { country: 'MX', baseUrl: 'https://openpay.s3.amazonaws.com' },\n            { country: 'CO',  baseUrl: 'https://resources.openpay.co' },\n            { country: 'PE', baseUrl: 'https://js.openpay.pe' }\n        ];\n        return scriptBaseUrl.find(function(item) { return countryCode == item.country }).baseUrl;\n    }\n</script>"
                     },
                     {
                         "type": "BOOLEAN",
@@ -67,7 +70,7 @@
                         "value": "false"
                     }
                 ],
-                "fingerprint": "1633451015425",
+                "fingerprint": "1649780428813",
                 "firingTriggerId": [
                     "73"
                 ],
@@ -300,7 +303,7 @@
                 "name": "Container Version"
             }
         ],
-        "fingerprint": "1640101424310",
-        "tagManagerUrl": "https://tagmanager.google.com/#/versions/accounts/4702907809/containers/13043242/versions/155?apiLink=version"
+        "fingerprint": "1649780538175",
+        "tagManagerUrl": "https://tagmanager.google.com/#/versions/accounts/4702907809/containers/13043242/versions/156?apiLink=version"
     }
 }
