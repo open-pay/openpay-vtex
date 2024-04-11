@@ -1,98 +1,54 @@
 {
     "exportFormatVersion": 2,
-    "exportTime": "2022-04-12 16:29:39",
+    "exportTime": "2024-04-11 01:01:25",
     "containerVersion": {
-        "path": "accounts/4702907809/containers/13043242/versions/156",
-        "accountId": "4702907809",
-        "containerId": "13043242",
-        "containerVersionId": "156",
-        "name": "Openpay vtex",
-        "description": "Soporte para generar el DeviceSessionId en Mx, Co y Pe",
+        "path": "accounts/6220527586/containers/179324859/versions/0",
+        "accountId": "6220527586",
+        "containerId": "179324859",
+        "containerVersionId": "0",
         "container": {
-            "path": "accounts/4702907809/containers/13043242",
-            "accountId": "4702907809",
-            "containerId": "13043242",
-            "name": "openpay vtex",
-            "publicId": "GTM-592LR4K",
+            "path": "accounts/6220527586/containers/179324859",
+            "accountId": "6220527586",
+            "containerId": "179324859",
+            "name": "openpay.dev",
+            "publicId": "GTM-KG82QK87",
             "usageContext": [
                 "WEB"
             ],
-            "fingerprint": "1579628229585",
-            "tagManagerUrl": "https://tagmanager.google.com/#/container/accounts/4702907809/containers/13043242/workspaces?apiLink=container",
-            "mode": "FULL"
+            "fingerprint": "1709658758600",
+            "tagManagerUrl": "https://tagmanager.google.com/#/container/accounts/6220527586/containers/179324859/workspaces?apiLink=container",
+            "features": {
+                "supportUserPermissions": true,
+                "supportEnvironments": true,
+                "supportWorkspaces": true,
+                "supportGtagConfigs": false,
+                "supportBuiltInVariables": true,
+                "supportClients": false,
+                "supportFolders": true,
+                "supportTags": true,
+                "supportTemplates": true,
+                "supportTriggers": true,
+                "supportVariables": true,
+                "supportVersions": true,
+                "supportZones": true,
+                "supportTransformations": false
+            },
+            "tagIds": [
+                "GTM-KG82QK87"
+            ]
         },
         "tag": [
             {
-                "accountId": "4702907809",
-                "containerId": "13043242",
-                "tagId": "72",
-                "name": "Openpay-PaymentReference",
-                "type": "html",
-                "parameter": [
-                    {
-                        "type": "TEMPLATE",
-                        "key": "html",
-                        "value": "\n<script>\n    $(document).ready(function(){\n        var alertPaymentDeclined = function(){\n            $('#app-top').find('h1').text('Pago no completado');\n            $('#app-top').find('.cconf-alert').empty();\n            $('#app-top').find('.cconf-alert').removeClass('bg-washed-green b--green');\n            $('#app-top').find('.cconf-alert').addClass('bg-washed-red b--red');\n\n            $('#app-top').find('.cconf-alert').append('<div class=\"fl w-100 w-100-ns\" style=\"overflow-wrap: break-word;\"><span class=\"db f4 fw6 mb4 dark\"><span>Su transacción fue rechazada!</span></span><p class=\"dark\"><span>Su banco rechazo el pago, el pedido no puede ser procesado por el comercio.</span></p><p class=\"dark\"><span>Intente su pago nuevamente.</span></p></div>');\n        }\n        var showPdfButton = function (host, merchantId, tid, nsu, tipoPago, isSpei){\n            var url = host + '/paynet-pdf/' + merchantId + '/' + tid;\n            $('#app-top').find('h1').text('Pedido en Proceso')\n            if (isSpei) {\n                url = host + '/spei-pdf/' + merchantId + '/' + nsu;\n                $('#app-top').find('.cconf-alert').empty()\n                $('#app-top').find('.cconf-alert').append('<div class=\"fl w-100 w-100-ns\" style=\"overflow-wrap: break-word;\"><span class=\"db f4 fw6 mb4 dark-green\"><span>¡Realiza tu transferencia y confirma tu pedido!</span></span><p class=\"dark-green\"><span>Imprime o guarda tu recibo en el botón <strong>\"Imprimir PDF de SPEI\"</strong>, sigue las instrucciones paso a paso y realiza tu SPEI a través de tu app o portal bancario.</span></p></div>');\n            }\n            console.log('Url referenceOpenPay: ' + url);\n            var buttonTag = \"Imprimir PDF de \" + tipoPago;\n            $('#checkout-confirmation-top').append('<div class=\"openpay-referencia ph3-ns w-70-ns center\"><div style=\"padding: 10px 20px;margin-top: 10px;background: white;display: inline-block;border-radius:5px;cursor: pointer;box-shadow: 0 1px 3px 0 rgba(0,0,0,.25);\"><a style=\"text-decoration: none;color: #137752;\" href=\"'+ url + '\" target=\"_blank\">'+buttonTag+'</a></div></div>');\n        }\n\n        var initOrderData = function() {\n            var merchantId ='{{openpay_merchant_id}}';\n            var country ='{{openpay_country}}';\n            var isSandbox = 'true' === '{{openpay_sandbox_mode}}';\n            var orderId = window.location.search.replace('?og=', '');\n\n            switch(country.toUpperCase()) {\n                case \"CO\":\n                    host = (isSandbox) ? 'https://sandbox-dashboard.openpay.co' : 'https://dashboard.openpay.co';\n                    break;\n                case \"PE\":\n                    host = (isSandbox) ? 'https://sandbox-dashboard.openpay.pe' : 'https://dashboard.openpay.pe';\n                    break;\n                case \"MX\":\n                default:\n                    host = (isSandbox) ? 'https://sandbox-dashboard.openpay.mx' : 'https://dashboard.openpay.mx';\n            }\n\n            $.get('/api/checkout/pub/orders/order-group/' + orderId, function(data, status){\n                if (data.length>0 && data[0].paymentData.transactions.length > 0 && data[0].paymentData.transactions[0].payments.length > 0) {\n                    var allowedAcquiers = [\"OPENPAY\", \"OPENPAYV2\"]\n                    var offlinePaymentAllowed = [\"PAGO EN TIENDA\", \"EFECTIVO\", \"PAGO EN AGENCIAS\"]\n                    var pago = data[0].paymentData.transactions[0].payments[0];\n                    var tipoPago = pago.paymentSystemName.replace(\"  \", \" \");\n                    var orderData = pago.connectorResponses;\n                    var messageStatus = orderData.Message;\n                    var tid= orderData.Tid;\n                    var nsu= orderData.nsu;\n                    var isSpei = 'SPEI' === tipoPago;\n                    var isPagoTienda = offlinePaymentAllowed.includes(tipoPago.toUpperCase())\n                    var acquier = pago.connectorResponses.acquirer;\n\n                    if (allowedAcquiers.includes(acquier.toUpperCase())) {\n                        if(messageStatus === \"Pending for confirm\" && !(isSpei || isPagoTienda)){\n                            //console.log('alertPaymenDecliend off');\n                            alertPaymentDeclined();\n                        } else if ((tid !== nsu) && (isSpei || isPagoTienda)){\n                            showPdfButton(host, merchantId, tid, nsu, tipoPago, isSpei);\n                        } else {\n                            console.log('Openpay no reference url');\n                        }\n                    }\n                }\n            });\n        }\n        setTimeout(initOrderData(),2000);\n    });\n</script>"
-                    },
-                    {
-                        "type": "BOOLEAN",
-                        "key": "supportDocumentWrite",
-                        "value": "false"
-                    }
-                ],
-                "fingerprint": "1640100378632",
-                "firingTriggerId": [
-                    "70"
-                ],
-                "tagFiringOption": "ONCE_PER_EVENT",
-                "monitoringMetadata": {
-                    "type": "MAP"
-                },
-                "consentSettings": {
-                    "consentStatus": "NOT_SET"
-                }
-            },
-            {
-                "accountId": "4702907809",
-                "containerId": "13043242",
-                "tagId": "75",
-                "name": "Openpay-DeviceSessionId",
-                "type": "html",
-                "parameter": [
-                    {
-                        "type": "TEMPLATE",
-                        "key": "html",
-                        "value": "<script>\n    var head = document.getElementsByTagName('head')[0];\n    var scriptOpenpay = document.createElement('script');\n    var country ='{{openpay_country}}';\n    console.log(country);\n    var baseUrl = getScriptBaseUrlByCountry(country);\n    scriptOpenpay.type = 'text/javascript';\n    scriptOpenpay.onload = function() {\n        loadScriptData();\n    }\n\n    scriptOpenpay.src = baseUrl + \"/openpay.v1.min.js\";\n    head.appendChild(scriptOpenpay);\n\n    function loadScriptData() {\n        var scriptData = document.createElement(\"script\");\n        scriptData.type=\"text/javascript\";\n        scriptData.src = baseUrl + \"/openpay-data.v1.min.js\";\n        scriptData.onload = function() {\n            generateDeviceSession();\n        }\n        head.appendChild(scriptData);\n    }\n\n    function generateDeviceSession() {\n        var sandboxMode = ('{{openpay_sandbox_mode}}' === 'true');\n        OpenPay.setId('{{openpay_merchant_id}}');\n        OpenPay.setApiKey('{{openpay_public_key}}');\n        OpenPay.setSandboxMode(sandboxMode);\n        var deviceSessionIdOpenPay = OpenPay.deviceData.setup();\n        console.log('deviceSessionIdOpenPay', deviceSessionIdOpenPay);\n        window.vtex.deviceFingerprint = deviceSessionIdOpenPay;\n    }\n\n    function getScriptBaseUrlByCountry(countryCode) {\n        var scriptBaseUrl = [\n            { country: 'MX', baseUrl: 'https://openpay.s3.amazonaws.com' },\n            { country: 'CO',  baseUrl: 'https://resources.openpay.co' },\n            { country: 'PE', baseUrl: 'https://js.openpay.pe' }\n        ];\n        return scriptBaseUrl.find(function(item) { return countryCode == item.country }).baseUrl;\n    }\n</script>"
-                    },
-                    {
-                        "type": "BOOLEAN",
-                        "key": "supportDocumentWrite",
-                        "value": "false"
-                    }
-                ],
-                "fingerprint": "1649780428813",
-                "firingTriggerId": [
-                    "73"
-                ],
-                "tagFiringOption": "ONCE_PER_EVENT",
-                "monitoringMetadata": {
-                    "type": "MAP"
-                },
-                "consentSettings": {
-                    "consentStatus": "NOT_SET"
-                }
-            },
-            {
-                "accountId": "4702907809",
-                "containerId": "13043242",
-                "tagId": "77",
+                "accountId": "6220527586",
+                "containerId": "179324859",
+                "tagId": "9",
                 "name": "Openpay-CheckoutDescriptions",
                 "type": "html",
                 "parameter": [
                     {
                         "type": "TEMPLATE",
                         "key": "html",
-                        "value": "<style>\n    .op-spei {\n        border-radius: 13px;\n        color: #3e4956;\n        font-weight: 300;\n        margin: 0;\n        padding: 0;\n        width: 100%;\n        font-family: \"Montserrat\";\n    }\n\n    .op-spei .op-spei__header>h3 {\n        display: block;\n        font-size: 16px;\n        font-weight: 700;\n        text-align: center;\n    }\n\n    .op-spei .op-spei__steps {\n        margin:0;\n    }\n\n    .op-spei .op-spei__steps>h4 {\n        font-size: 13px;\n        text-align: center;\n    }\n\n    .op-spei .op-spei__row {\n        display: grid;\n        justify-content: space-between;\n        grid-template-columns: 30% 30% 30%;\n    }\n\n    .op-spei .op-spei__col {\n        text-align: center;\n    }\n\n    .op-spei .op-spei__image>img {\n        max-width: 90%;\n    }\n\n    .op-spei .op-spei__txt {\n        font-size: 12px;\n        line-height: 1.3em;\n        margin-top: 5px;\n    }\n\n    .op-spei .op-spei__footer>p {\n        display: flex;\n        justify-content: center;\n        align-items: center;\n        font-size: 11px;\n    }\n\n    .op-spei .op-spei__footer>p img {\n        width: 50px;\n        margin-left: 10px;\n    }\n\n    .op-spei__footer {\n        text-align: left;\n    }\n\n    .row-steps {\n        display: flex;\n        text-align: left;\n        align-items: center;\n        margin: 1.5rem 0 0 0;\n    }\n\n    .row-steps>img {\n        margin: 0 1em 0 0;\n        width: 20%;\n        height: 100%;\n    }\n\n    .row-steps>p>span:first-child,\n    .row-steps>div>p>span:first-child,\n    .op-spei__steps>p:last-child {\n        font-weight: bold;\n    }\n\n    .op-spei__steps>p:last-child {\n        margin-top: 1.5rem;\n    }\n\n    .row-steps>div>p:first-child {\n        margin-bottom: 0;\n    }\n\n    .row-steps>div>p:nth-child(2) {\n        font-size: x-small;\n        line-height: 100%;\n    }\n\n    .title-steps {\n        background-color: #FF8F1C;\n        color: #fff;\n        font-weight: bold;\n        padding: 10px;\n    }\n\n    .op-spei__header>img {\n        margin: 1.5rem 0 0.5rem 0;\n    }\n\n    .op-spei__header{\n        padding: 0.5rem;\n    }\n\n\n    .tiendas>img {\n        width: 80%;\n        height: 100%;\n        /*margin-left: 1rem;*/\n    }\n\n    .tiendas {\n        display: flex;\n        align-items: center;\n        justify-content: center;\n        margin: 1.5rem 0 1.5rem 0;\n    }\n\n    .tiendas>a>img {\n        width: 1.4rem;\n        margin-left: 0.5rem;\n    }\n\n    #storesModal .modal-header {\n        border-bottom: 0;\n    }\n\n    #storesModal .modal-header h3:first-child {\n        margin-top: 2.2rem;\n    }\n\n    #storesModal .modal-header h3 {\n        font-size: 1.8em;\n        font-weight: bold;\n        text-align: center;\n        margin-top: 1rem;\n    }\n\n    #storesModal>.modal-header>img {\n        width: 5%;\n        opacity: 1;\n    }\n\n    #storesModal>.modal-header>div {\n        text-align: center;\n        padding: 15px;\n    }\n\n    /* STORES HEADER */\n    .op-spei__header h3{\n        color: #FF8F1C;\n        padding: 1.5rem 0 1.5rem 0;\n        margin: 0;\n    }\n    /*END STORES HEADER */\n\n    #storesModal .modal-body {\n        max-height: 800px;\n        text-align: center;\n    }\n\n    #storesModal .modal-body img {\n        max-width: 80%;\n    }\n\n    #storesModal .modal-footer {\n        border-top: 0;\n        background-color: #fff;\n        text-align: center;\n    }\n\n    #storesModal .modal-footer a .go-btn {\n        background-color: #FF8F1C;\n        /* Green */\n        border: none;\n        color: white;\n        padding: 20px;\n        text-align: center;\n        text-decoration: none;\n        font-weight: bold;\n        cursor: pointer;\n        border-radius: 8px;\n        margin-bottom: 2rem;\n        width: 60%;\n    }\n\n    #storesModal .modal-footer a .go-btn:hover {\n        background-color: #FF7E1D;\n    }\n\n    #banksModal .modal-header {\n        border-bottom: 0;\n    }\n\n    #banksModal .modal-header h3:first-child {\n        margin-top: 2.2rem;\n    }\n\n    #banksModal .modal-header h3 {\n        font-size: 1.8em;\n        font-weight: bold;\n        text-align: center;\n        margin-top: 1rem;\n    }\n\n    #banksModal>.modal-header>img {\n        width: 5%;\n        opacity: 1;\n    }\n\n    #banksModal>.modal-header>div {\n        text-align: center;\n        padding: 15px;\n    }\n\n    #banksModal .modal-body {\n        max-height: 800px;\n        text-align: center;\n    }\n\n    #banksModal .modal-body img {\n        max-width: 80%;\n    }\n\n    #banksModal .modal-footer {\n        border-top: 0;\n        background-color: #fff;\n        text-align: center;\n    }\n\n    #banksModal .modal-footer a .go-btn {\n        background-color: #FF8F1C;\n        /* Green */\n        border: none;\n        color: white;\n        padding: 20px;\n        text-align: center;\n        text-decoration: none;\n        font-weight: bold;\n        cursor: pointer;\n        border-radius: 8px;\n        margin-bottom: 2rem;\n        width: 60%;\n    }\n\n    #banksModal .modal-footer a .go-btn:hover {\n        background-color: #FF7E1D;\n    }\n\n    /*VERTICAL LINE*/\n    .step-list{\n        position: relative;\n        margin: 0 0.8rem 1.5rem 0.8rem;\n    }\n\n    .step-list li {\n        clear: both;\n        overflow: hidden;\n        position: relative;\n        padding:0;\n    }\n\n    .step-list ul {\n        margin:0;\n    }\n\n    .step-list ul::before {\n        position: absolute;\n        content: ' ';\n        width: 0.3rem;\n        height: 72%;\n        background-color: #FFCB9C;\n        left: 9%;\n        top: 1.5rem;\n    }\n\n    .steps-view{\n        border-radius: 13px;\n        padding: 3px;\n    }\n\n    .op-spei__header,\n    .op-spei__steps,\n    .op-spei__footer{\n        padding: 0 15px;\n    }\n\n    .op-spei__header img,\n    .op-spei__steps img,\n    .op-spei__footer img{\n        background-color: #fff;\n    }\n\n/*# PAGO EN AGENCIAS ELIMINAR CON EL REBRANDING #*/\n    .pago_agencias a{\n        color: #11BFF8;\n    }\n\n    .pago_agencias .modal-footer a .go-btn:hover {\n        background-color: #0063A8;\n    }\n\n    .pago_agencias .modal-footer a .go-btn {\n        background-color: #0287CC;\n        /* Green */\n        border: none;\n        color: white;\n        padding: 20px;\n        text-align: center;\n        text-decoration: none;\n        font-weight: bold;\n        cursor: pointer;\n        border-radius: 8px;\n        margin-bottom: 2rem;\n        width: 60%;\n    }\n\n    .pago_agencias .modal-header h3 {\n        font-size: 1.8em;\n        font-weight: bold;\n        text-align: center;\n        margin-top: 1rem;\n        color: #0063A8;\n    }\n\n    .pago_agencias .op-spei__header h3{\n        color: #0063A8;\n        padding: 1.5rem 0 1.5rem 0;\n        margin: 0;\n    }\n\n    .pago_agencias .title-steps {\n        background-color: #0063A8;\n        color: #fff;\n        font-weight: bold;\n        padding: 10px;\n    }\n\n    .pago_agencias .row-steps>p>span:first-child,\n    .pago_agencias .row-steps>div>p>span:first-child,\n    .pago_agencias .op-spei__steps>p:last-child {\n        font-weight: bold;\n        color: #0063A8;\n    }\n\n    .pago_agencias .op-spei__footer>p {\n        display: flex;\n        justify-content: center;\n        align-items: center;\n        font-size: 11px;\n        color: #0063A8;\n    }\n\n    .pago_agencias .op-spei__header>h3 {\n        display: block;\n        font-size: 16px;\n        font-weight: 700;\n        text-align: center;\n        color: #0063A8;\n    }\n\n    .pago_agencias {\n        border-radius: 13px;\n        color: #3e4956;\n        font-weight: 300;\n        margin: 0;\n        padding: 0;\n        width: 100%;\n        font-family: \"Montserrat\";\n    }\n\n    .pago_agencias .step-list ul::before {\n        position: absolute;\n        content: ' ';\n        width: 0.3rem;\n        height: 72%;\n        background-color: #D8F4FF;\n        left: 9%;\n        top: 1.5rem;\n    }\n/*# PAGO EN AGENCIAS ELIMINAR CON EL REBRANDING #*/\n    \n</style>\n\n<script>\n    $(document).ready(function () {\n        var eventExecution = true;\n        var country = '{{openpay_country}}';\n        $(window).on('orderFormUpdated.vtex', function (evt, orderForm) {\n            var payment = orderForm.paymentData.payments[0];\n            var paymentId = payment.paymentSystem;\n            var paymentMethods = orderForm.paymentData.paymentSystems;\n            console.log(\"Payment Methods: \" + JSON.stringify(paymentMethods));\n            console.log(\"COUNTRY: \" + country);\n            if (eventExecution) {\n                addPaymentMethodDescription(paymentMethods);\n                eventExecution = false;\n            }\n        });\n\n        function addPaymentMethodDescription(paymentMethods) {\n            var i = null;\n            for (i = 0; paymentMethods.length > i; i += 1) {\n                if (paymentMethods[i].name.toUpperCase() == \"PSE\") {\n                    $('.custom' + paymentMethods[i].id + 'PaymentGroupPaymentGroup').html(\n                        '<section style=\"text-align: center; background-color: white;\" class=\"op-spei\"> <div class=\"op-spei__header\"> <img src=\"https://img.openpay.mx/plugins/vtex/pse_logo.png\" alt=\"pse\"> <p>Realiza tu pago a través de servicio PSE </p> </div> <p class=\"title-steps\">Realiza el pago en 3 pasos:</p> <div class=\"op-spei__steps\"> <section class=\"step-list\"> <ul> <li class=\"step-1\"> <div class=\"row-steps\"> <img src=\"https://img.openpay.mx/plugins/vtex/cart_ico.svg\" alt=\"step_1\"> <p><span>Completa tu compra</span><br>Ingresa la información solicitada.</p> </div> </li>'\n                        +\n                        '<li class=\"step-2\"> <div class=\"row-steps\"> <img  src=\"https://img.openpay.mx/plugins/vtex/user_ico.svg\" alt=\"step_2\"> <div> <p><span>Ingresa tu cuenta PSE</span><br>Serás redireccionado. Ingresa tu correo y contraseña.</p> <p style=\"font-size: x-small; line-height: 100%;\">Si no tienes cuenta, deberás crear una.</p> </div> </div> </li> <li class=\"step-3\"> <div class=\"row-steps\"> <img  src=\"https://img.openpay.mx/plugins/vtex/shield_ico.svg\" alt=\"step_3\"> <div> <p><span>Autoriza la transacción</span><br>En el portal de tu banco, ingresa tus datos (usuario y contraseña)</p> </div> </div> </li> </ul> </section> </div> <div class=\"op-spei__footer\"> <p style=\"font-weight: bold; font-size: 15px; text-align: center; margin-top: 1.5rem;\">Recibirás la confirmación de tu compra al instante.</p> <p style=\"margin: 0; padding-bottom: 2rem; padding-top: 1rem;\"><span>Tu pago será procesado por</span> <img src=\"https://img.openpay.mx/plugins/vtex/openpay_logo.svg\" alt=\"Openpay Logo\"> </p> </div> </section>');\n                }\n\n                if (paymentMethods[i].name.toUpperCase() == \"PAGO EN TIENDA\" && country == \"MX\") {\n                    $('.custom' + paymentMethods[i].id + 'PaymentGroupPaymentGroup').html(\n                        '<section style=\"text-align: center; background-color: white;\" class=\"op-spei\"> <div class=\"op-spei__header\"> <img src=\"https://img.openpay.mx/plugins/vtex/paynet_logo.png\" alt=\"paynet\"> <p>Paga con efectivo en alguno de los establecimientos afiliados.<br>Tenemos más de 30 mil puntos de pago<a href=\"https://www.paynet.com.mx/mapa-tiendas/index.html\" target=\"_blank\"> Ubica el más cercano a ti.</a> </p> <div class=\"tiendas\"> <img src=\"https://img.openpay.mx/plugins/vtex/establecimientos_paynet_mx.png\" alt=\"establecimientos_paynet_mx\"> <a href=\"#storesModal\" data-toggle=\"modal\"><img src=\"https://img.openpay.mx/plugins/vtex/plus_ico.svg\"></a> </div> </div> <p class=\"title-steps\">Realiza el pago en 3 pasos:</p> <div class=\"op-spei__steps\"> <section class=\"step-list\"> <ul> <li class=\"step-1\"> <div class=\"row-steps\"> <img src=\"https://img.openpay.mx/plugins/vtex/cart_ico.svg\" alt=\"step_1\"> <p><span>Reserva tu compra</span><br>No te preocupes, tu pedido quedará en espera hasta que realices tu pago.</p> </div> </li>' \n                        + \n                        '<li class=\"step-2\"> <div class=\"row-steps\"> <img src=\"https://img.openpay.mx/plugins/vtex/ticket_ico.svg\" alt=\"step_2\"> <p><span>Guarda la referencia</span><br>Imprímela o tómale una foto y acude a un establecimiento.</p> </div> </li> <li class=\"step-3\"> <div class=\"row-steps\"> <img src=\"https://img.openpay.mx/plugins/vtex/store_ico.svg\" alt=\"step_3\"> <div> <p><span>Realiza el pago</span><br><a href=\"https://www.paynet.com.mx/mapa-tiendas/index.html\" target=\"_blank\">Ubica un establecimiento</a> cercano a ti.</p> <p style=\"font-size: x-small; line-height: 100%;\">La comisión por el uso del servicio puede variar de acuerdo con el establecimiento.</p> </div> </div> </li> </ul> </section> </div> <div class=\"op-spei__footer\"> <p style=\"font-weight: bold; font-size: 15px; text-align: center; margin-top: 1.5rem;\">Recibirás la confirmación de tu compra al instante.</p> <p style=\"margin: 0; padding-bottom: 2rem; padding-top: 1rem;\"><span>Tu pago será procesado por</span> <img src=\"https://img.openpay.mx/plugins/vtex/openpay_logo.svg\" alt=\"Openpay Logo\"> </p> </div></section>');\n                    $('body').append('<div id=\"storesModal\" class=\"modal hide fade\" aria-hidden=\"true\"> <div class=\"modal-header\"> <img class=\"close\" data-dismiss=\"modal\" src=\"https://img.openpay.mx/plugins/vtex/close_ico.svg\" alt=\"close\"> <h3>Establecimientos afiliados</h3> </div> <div class=\"modal-body\"> <img src=\"https://img.openpay.mx/plugins/vtex/tiendas_mx.png\" alt=\"tiendas_mx\"> </div> <div class=\"modal-footer\"> <a href=\"https://www.paynet.com.mx/mapa-tiendas/index.html\" target=\"_blank\"><button class=\"go-btn\"><img style=\"max-width: 5%;\" src=\"https://img.openpay.mx/plugins/vtex/location_ico.svg\"> Ubica un punto de pago cercano a ti</button></a></div></div>');\n                }\n\n                if (paymentMethods[i].name.toUpperCase() == \"PAGO EN TIENDA\" && country == \"CO\") {\n                    $('.custom' + paymentMethods[i].id + 'PaymentGroupPaymentGroup').html(\n                        '<section style=\"text-align: center; background-color: white;\" class=\"op-spei\"> <div class=\"op-spei__header\"> <h3>PAGO EN EFECTIVO</h3> <p>Realiza tu pago a través de alguna de nuestras redes de recaudo.<br>Tenemos más de 13 mil puntos.</p> <div class=\"tiendas\"> <img style=\"width: 35%;\" src=\"https://img.openpay.mx/plugins/vtex/Puntored.png\" alt=\"punto_red\"> <img style=\"width: 35%;\" src=\"https://img.openpay.mx/plugins/vtex/ViaBaloto.png\" alt=\"via_baloto\"> <a href=\"#storesModal\" data-toggle=\"modal\"><img src=\"https://img.openpay.mx/plugins/vtex/plus_ico.svg\"></a> </div> </div> <p class=\"title-steps\">Realiza el pago en 3 pasos:</p> <div class=\"op-spei__steps\"> <section class=\"step-list\"> <ul> <li class=\"step-1\"> <div class=\"row-steps\"> <img src=\"https://img.openpay.mx/plugins/vtex/cart_ico.svg\" alt=\"step_1\"> <p><span>Reserva tu compra</span><br>No te preocupes, tu pedido quedará en espera hasta que realices tu pago.</p> </div> </li>'\n                        +\n                        '<li class=\"step-2\"> <div class=\"row-steps\"> <img src=\"https://img.openpay.mx/plugins/vtex/ticket_ico.svg\" alt=\"step_2\"> <p><span>Guarda tu recibo de pago</span><br>Imprímelo o tómale una foto y acércate a algunoo de los puntos aliados de recaudo.</p> </div> </li> <li class=\"step-3\"> <div class=\"row-steps\"> <img src=\"https://img.openpay.mx/plugins/vtex/store_ico.svg\" alt=\"step_3\"> <div> <p><span>Realiza el pago</span><br><a href=\"https://www.paynet.com.mx/mapa-tiendas/index.html\" target=\"_blank\">Ubica el punto de pago</a> más cercano.</p> </div> </div> </li> </ul> </section> </div> <div class=\"op-spei__footer\"> <p style=\"font-weight: bold; font-size: 15px; text-align: center; margin-top: 1.5rem;\">Recibirás la confirmación de tu compra al instante.</p> <p style=\"margin: 0; padding-bottom: 2rem; padding-top: 1rem;\"><span>Tu pago será procesado por</span> <img src=\"https://img.openpay.mx/plugins/vtex/openpay_logo.svg\" alt=\"Openpay Logo\"> </p> </div></section>');\n                    $('body').append('<div id=\"storesModal\" class=\"modal hide fade\" aria-hidden=\"true\"> <div class=\"modal-header\"> <img class=\"close\" data-dismiss=\"modal\" src=\"https://img.openpay.mx/plugins/vtex/close_ico.svg\" alt=\"close\"> <h3>Red de recaudo a nivel nacional</h3> <div> <img src=\"https://img.openpay.mx/plugins/vtex/Puntored.png\" alt=\"punto_red\"> <img src=\"https://img.openpay.mx/plugins/vtex/ViaBaloto.png\" alt=\"via_baloto\"> </div> <h3>Efectivo en tiendas de autoservicio</h3> </div> <div class=\"modal-body\"> <img src=\"https://img.openpay.mx/plugins/vtex/tiendas_co.png\" alt=\"tiendas_co\"> </div> <div class=\"modal-footer\"> <a href=\"https://docs.openpay.co/docs/mapa-de-tiendas.html\" target=\"_blank\"><button class=\"go-btn\"><img style=\"max-width: 5%;\" src=\"https://img.openpay.mx/plugins/vtex/location_ico.svg\"> Ubica un punto de pago cercano a ti</button></a></div></div>');\n                }\n\n                if (paymentMethods[i].name.toUpperCase() == \"SPEI\") {\n                    $('.SPEIPaymentGroup').html('<section style=\"text-align: center; background-color: white;\" class=\"op-spei\"> <div class=\"op-spei__header\"> <img src=\"https://img.openpay.mx/plugins/vtex/spei_logo.png\" alt=\"SPEI\"> <p>Realiza tu pago por transferencia electrónica desde la banca en línea de tu preferencia.<br><a href=\"#\">Conoce todos los bancos participantes.</a></p> <div class=\"tiendas\"> <img src=\"https://img.openpay.mx/plugins/vtex/establecimientos_spei_mx.png\" alt=\"Establecimientos_SPEI_mexico\"> <a href=\"#banksModal\" data-toggle=\"modal\"><img src=\"https://img.openpay.mx/plugins/vtex/plus_ico.svg\"></a> </div> </div> <p class=\"title-steps\">Realiza el pago en 3 pasos:</p> <div class=\"op-spei__steps\"> <section class=\"step-list\"> <ul> <li class=\"step-1\"> <div class=\"row-steps\"> <img src=\"https://img.openpay.mx/plugins/vtex/cart_ico.svg\" alt=\"step_1\"> <p><span>Reserva tu compra</span><br>No te preocupes, tu pedido quedará en espera hasta que realices tu pago.</p> </div> </li>'\n                    +\n                    '<li class=\"step-2\"> <div class=\"row-steps\"> <img src=\"https://img.openpay.mx/plugins/vtex/ticket_ico.svg\" alt=\"step_2\"> <p><span>Sigue las instrucciones de pago</span><br>Desde el PDF que enviaremos al correo registrado en el proceso de compra.</p> </div> </li> <li class=\"step-3\"> <div class=\"row-steps\"> <img src=\"https://img.openpay.mx/plugins/vtex/wallet_ico.svg\" alt=\"step_3\"> <p><span>Realiza el pago</span><br>Desde el portal bancario de tu preferencia.</p> </div> </li> </ul> </section> </div> <div class=\"op-spei__footer\"> <p style=\"font-weight: bold; font-size: 15px; text-align: center; margin-top: 1.5rem;\">Recibirás la confirmación de tu compra al instante.</p> <p style=\"margin: 0; padding-bottom: 2rem; padding-top: 1rem;\"><span>Tu pago será procesado por</span> <img src=\"https://img.openpay.mx/plugins/vtex/openpay_logo.svg\" alt=\"Openpay Logo\"> </p> </div></section>');\n                    $('body').append('<div id=\"banksModal\" class=\"modal hide fade\" aria-hidden=\"true\"> <div class=\"modal-header\"> <img class=\"close\" data-dismiss=\"modal\" src=\"https://img.openpay.mx/plugins/vtex/close_ico.svg\" alt=\"close\"> <h3>Bancos participantes</h3> </div> <div class=\"modal-body\"> <img src=\"https://img.openpay.mx/plugins/vtex/bancos_spei.png\" alt=\"bancos_mx\"> </div></div>');\n                }\n                \n                if (paymentMethods[i].name.toUpperCase() == \"CHECKOUT LENDING\") {\n                    $('.custom' + paymentMethods[i].id + 'PaymentGroupPaymentGroup').html(\n                        '<section style=\"text-align: center; background-color: white;\" class=\"op-spei\"> <div class=\"op-spei__header\"> <img src=\"https://img.openpay.mx/plugins/vtex/kueski_logo.png\" alt=\"kueski\"> <p>Realiza tus compras a crédito, paga a plazos y sin tarjeta. </p> </div> <p class=\"title-steps\">Realiza el pago en 3 pasos:</p> <div class=\"op-spei__steps\"> <section class=\"step-list\"> <ul> <li class=\"step-1\"> <div class=\"row-steps\"> <img  src=\"https://img.openpay.mx/plugins/vtex/userplus_ico.svg\" alt=\"step_1\"> <p><span>Crea tu cuenta</span><br>Serás redireccionado a Kueski Pay.</p> </div> </li>'\n                        +\n                        '<li class=\"step-2\"> <div class=\"row-steps\"> <img  src=\"https://img.openpay.mx/plugins/vtex/form_ico.svg\" alt=\"step_2\"> <p><span>Contesta el formulario en línea</span><br>Descubre si tu crédito fue aprobado en minutos.</p> </div> </li> <li class=\"step-3\"> <div class=\"row-steps\"> <img  src=\"https://img.openpay.mx/plugins/vtex/page_ico.svg\" alt=\"step_3\"> <div> <p><span>Selecciona el plazo de pago que mejor te funcione</span></p> </div> </div> </li> </ul> </section> </div> <div class=\"op-spei__footer\"> <p style=\"font-weight: bold; font-size: 15px; text-align: center; margin-top: 1.5rem;\">Recibirás la confirmación de tu compra por correo y los detalles de tu crédito por parte de Kueski Pay.</p> <p style=\"margin: 0; padding-bottom: 2rem; padding-top: 1rem;\"><span>Tu pago será procesado por</span> <img src=\"https://img.openpay.mx/plugins/vtex/openpay_logo.svg\" alt=\"Openpay Logo\"> </p> </div></section>');\n                }\n                if (paymentMethods[i].name.toUpperCase() == \"PAGO EN AGENCIAS\") {\n                    $('.custom' + paymentMethods[i].id + 'PaymentGroupPaymentGroup').html(\n                        '<section style=\"text-align: center; background-color: white;\" class=\"pago_agencias op-spei\"> <div class=\"op-spei__header\"><h3>PAGO EN AGENCIAS</h3> <p>Realiza tu pago a través de alguna de nuestras agencias.</p> <div class=\"tiendas\"> <img style=\"width: 100%; \"src=\"https://img.openpay.mx/plugins/agencias_logos.png\" alt=\"agencias_logo\"> </div> </div> <p class=\"title-steps\">Realiza el pago en 3 pasos:</p> <div class=\"op-spei__steps\"> <section class=\"step-list\"> <ul> <li class=\"step-1\"> <div class=\"row-steps\"><img src=\"https://img.openpay.mx/plugins/vtex/cart_ico.svg\" alt=\"step_1\"> <p><span>Reserva tu compra</span><br>No te preocupes, tu pedido quedará en espera hasta que realices tu pago.</p></div> </li>'\n                        +\n                        '<li class=\"step-2\"> <div class=\"row-steps\"><img src=\"https://img.openpay.mx/plugins/vtex/ticket_ico.svg\" alt=\"step_2\"> <p><span>Guarda tu recibo de pago</span><br>Imprímelo o tómale una foto y acércate a alguna agencia aliada.</p></div> </li> <li class=\"step-3\"> <div class=\"row-steps\"><img src=\"https://img.openpay.mx/plugins/vtex/store_ico.svg\" alt=\"step_3\"> <div><p><span>Realiza el pago</span><br>Ubica tu agencia más cercana y realiza el pago.</p></div> </div> </li> </ul> </section> </div> <div class=\"op-spei__footer\"><p style=\"font-weight: bold; font-size: 15px; text-align: center; margin-top: 1.5rem;\"> Recibirás la confirmación de tu compra al instante.</p> <p style=\"margin: 0; padding-bottom: 2rem; padding-top: 1rem;\"><span>Tu pago será procesado por</span> <img src=\"https://img.openpay.mx/plugins/openpay_logo.svg\" alt=\"Openpay Logo\"></p></div></section>');\n                }\n            }\n        };\n    });\n</script>"
+                        "value": "<style>\n    .op-spei {\n        border-radius: 13px;\n        color: #3e4956;\n        font-weight: 300;\n        margin: 0;\n        padding: 0;\n        width: 100%;\n        font-family: \"Montserrat\";\n    }\n\n    .op-spei .op-spei__header>h3 {\n        display: block;\n        font-size: 16px;\n        font-weight: 700;\n        text-align: center;\n    }\n\n    .op-spei .op-spei__steps {\n        margin:0;\n    }\n\n    .op-spei .op-spei__steps>h4 {\n        font-size: 13px;\n        text-align: center;\n    }\n\n    .op-spei .op-spei__row {\n        display: grid;\n        justify-content: space-between;\n        grid-template-columns: 30% 30% 30%;\n    }\n\n    .op-spei .op-spei__col {\n        text-align: center;\n    }\n\n    .op-spei .op-spei__image>img {\n        max-width: 90%;\n    }\n\n    .op-spei .op-spei__txt {\n        font-size: 12px;\n        line-height: 1.3em;\n        margin-top: 5px;\n    }\n\n    .op-spei .op-spei__footer>p {\n        display: flex;\n        justify-content: center;\n        align-items: center;\n        font-size: 11px;\n    }\n\n    .op-spei .op-spei__footer>p img {\n        width: 50px;\n        margin-left: 10px;\n    }\n\n    .op-spei__footer {\n        text-align: left;\n    }\n\n    .row-steps {\n        display: flex;\n        text-align: left;\n        align-items: center;\n        margin: 1.5rem 0 0 0;\n    }\n\n    .row-steps>img {\n        margin: 0 1em 0 0;\n        width: 20%;\n        height: 100%;\n    }\n\n    .row-steps>p>span:first-child,\n    .row-steps>div>p>span:first-child,\n    .op-spei__steps>p:last-child {\n        font-weight: bold;\n    }\n\n    .op-spei__steps>p:last-child {\n        margin-top: 1.5rem;\n    }\n\n    .row-steps>div>p:first-child {\n        margin-bottom: 0;\n    }\n\n    .row-steps>div>p:nth-child(2) {\n        font-size: x-small;\n        line-height: 100%;\n    }\n\n    .title-steps {\n        background-color: #0063A8;\n        color: #fff;\n        font-weight: bold;\n        padding: 10px;\n    }\n\n    .op-spei__header>img {\n        margin: 1.5rem 0 0.5rem 0;\n    }\n\n    .op-spei__header{\n        padding: 0.5rem;\n    }\n\n\n    .tiendas>img {\n        width: 80%;\n        height: 100%;\n        /*margin-left: 1rem;*/\n    }\n\n    .tiendas {\n        display: flex;\n        align-items: center;\n        justify-content: center;\n        margin: 1.5rem 0 1.5rem 0;\n    }\n\n    .tiendas>a>img {\n        width: 1.4rem;\n        margin-left: 0.5rem;\n    }\n\n    #storesModal .modal-header {\n        border-bottom: 0;\n    }\n\n    #storesModal .modal-header h3:first-child {\n        margin-top: 2.2rem;\n    }\n\n    #storesModal .modal-header h3 {\n        font-size: 1.8em;\n        font-weight: bold;\n        text-align: center;\n        margin-top: 1rem;\n    }\n\n    #storesModal>.modal-header>img {\n        width: 5%;\n        opacity: 1;\n    }\n\n    #storesModal>.modal-header>div {\n        text-align: center;\n        padding: 15px;\n    }\n\n    /* STORES HEADER */\n    .op-spei__header h3{\n        color: #0063A8;\n        padding: 1.5rem 0 1.5rem 0;\n        margin: 0;\n    }\n    /*END STORES HEADER */\n\n    #storesModal .modal-body {\n        max-height: 800px;\n        text-align: center;\n    }\n\n    #storesModal .modal-body img {\n        max-width: 80%;\n    }\n\n    #storesModal .modal-footer {\n        border-top: 0;\n        background-color: #fff;\n        text-align: center;\n    }\n\n    #storesModal .modal-footer a .go-btn {\n        background-color: #0063A8;\n        /* Green */\n        border: none;\n        color: white;\n        padding: 20px;\n        text-align: center;\n        text-decoration: none;\n        font-weight: bold;\n        cursor: pointer;\n        border-radius: 8px;\n        margin-bottom: 2rem;\n        width: 60%;\n    }\n\n    #storesModal .modal-footer a .go-btn:hover {\n        background-color: #FF7E1D;\n    }\n\n    #banksModal .modal-header {\n        border-bottom: 0;\n    }\n\n    #banksModal .modal-header h3:first-child {\n        margin-top: 2.2rem;\n    }\n\n    #banksModal .modal-header h3 {\n        font-size: 1.8em;\n        font-weight: bold;\n        text-align: center;\n        margin-top: 1rem;\n    }\n\n    #banksModal>.modal-header>img {\n        width: 5%;\n        opacity: 1;\n    }\n\n    #banksModal>.modal-header>div {\n        text-align: center;\n        padding: 15px;\n    }\n\n    #banksModal .modal-body {\n        max-height: 800px;\n        text-align: center;\n    }\n\n    #banksModal .modal-body img {\n        max-width: 80%;\n    }\n\n    #banksModal .modal-footer {\n        border-top: 0;\n        background-color: #fff;\n        text-align: center;\n    }\n\n    #banksModal .modal-footer a .go-btn {\n        background-color: #0063A8;\n        /* Green */\n        border: none;\n        color: white;\n        padding: 20px;\n        text-align: center;\n        text-decoration: none;\n        font-weight: bold;\n        cursor: pointer;\n        border-radius: 8px;\n        margin-bottom: 2rem;\n        width: 60%;\n    }\n\n    #banksModal .modal-footer a .go-btn:hover {\n        background-color: #FF7E1D;\n    }\n\n    /*VERTICAL LINE*/\n    .step-list{\n        position: relative;\n        margin: 0 0.8rem 1.5rem 0.8rem;\n    }\n\n    .step-list li {\n        clear: both;\n        overflow: hidden;\n        position: relative;\n        padding:0;\n    }\n\n    .step-list ul {\n        margin:0;\n    }\n\n    .step-list ul::before {\n        position: absolute;\n        content: ' ';\n        width: 0.3rem;\n        height: 72%;\n        background-color: #D8F4FF;\n        left: 9%;\n        top: 1.5rem;\n    }\n\n    .steps-view{\n        border-radius: 13px;\n        padding: 3px;\n    }\n\n    .op-spei__header,\n    .op-spei__steps,\n    .op-spei__footer{\n        padding: 0 15px;\n    }\n\n    .op-spei__header img,\n    .op-spei__steps img,\n    .op-spei__footer img{\n        background-color: #fff;\n    }\n\n/*# PAGO EN AGENCIAS ELIMINAR CON EL REBRANDING #*/\n    .pago_agencias a{\n        color: #11BFF8;\n    }\n\n    .pago_agencias .modal-footer a .go-btn:hover {\n        background-color: #0063A8;\n    }\n\n    .pago_agencias .modal-footer a .go-btn {\n        background-color: #0287CC;\n        /* Green */\n        border: none;\n        color: white;\n        padding: 20px;\n        text-align: center;\n        text-decoration: none;\n        font-weight: bold;\n        cursor: pointer;\n        border-radius: 8px;\n        margin-bottom: 2rem;\n        width: 60%;\n    }\n\n    .pago_agencias .modal-header h3 {\n        font-size: 1.8em;\n        font-weight: bold;\n        text-align: center;\n        margin-top: 1rem;\n        color: #0063A8;\n    }\n\n    .pago_agencias .op-spei__header h3{\n        color: #0063A8;\n        padding: 1.5rem 0 1.5rem 0;\n        margin: 0;\n    }\n\n    .pago_agencias .title-steps {\n        background-color: #0063A8;\n        color: #fff;\n        font-weight: bold;\n        padding: 10px;\n    }\n\n    .pago_agencias .row-steps>p>span:first-child,\n    .pago_agencias .row-steps>div>p>span:first-child,\n    .pago_agencias .op-spei__steps>p:last-child {\n        font-weight: bold;\n        color: #0063A8;\n    }\n\n    .pago_agencias .op-spei__footer>p {\n        display: flex;\n        justify-content: center;\n        align-items: center;\n        font-size: 11px;\n        color: #0063A8;\n    }\n\n    .pago_agencias .op-spei__header>h3 {\n        display: block;\n        font-size: 16px;\n        font-weight: 700;\n        text-align: center;\n        color: #0063A8;\n    }\n\n    .pago_agencias {\n        border-radius: 13px;\n        color: #3e4956;\n        font-weight: 300;\n        margin: 0;\n        padding: 0;\n        width: 100%;\n        font-family: \"Montserrat\";\n    }\n\n    .pago_agencias .step-list ul::before {\n        position: absolute;\n        content: ' ';\n        width: 0.3rem;\n        height: 72%;\n        background-color: #D8F4FF;\n        left: 9%;\n        top: 1.5rem;\n    }\n/*# PAGO EN AGENCIAS ELIMINAR CON EL REBRANDING #*/\n    \n</style>\n\n<script>\n    $(document).ready(function () {\n        var eventExecution = true;\n\n        $(window).on('orderFormUpdated.vtex', function (evt, orderForm) {\n            var payment = orderForm.paymentData.payments[0];\n            var paymentId = payment.paymentSystem;\n            var paymentMethods = orderForm.paymentData.paymentSystems;\n            console.log(\"CheckoutDescriptions - COUNTRY: \" + country);\n            if (eventExecution) {\n                addPaymentMethodDescription(paymentMethods);\n                eventExecution = false;\n            }\n        });\n\n        function addPaymentMethodDescription(paymentMethods) {\n            var i = null;\n            for (i = 0; paymentMethods.length > i; i += 1) {\n                if (paymentMethods[i].name.toUpperCase() == \"PSE\") {\n                    $('.custom' + paymentMethods[i].id + 'PaymentGroupPaymentGroup').html(\n                        '<section style=\"text-align: center; background-color: white;\" class=\"op-spei\"> <div class=\"op-spei__header\"> <img src=\"https://img.openpay.mx/plugins/vtex/pse_logo.png\" alt=\"pse\"> <p>Realiza tu pago a través de servicio PSE </p> </div> <p class=\"title-steps\">Realiza el pago en 3 pasos:</p> <div class=\"op-spei__steps\"> <section class=\"step-list\"> <ul> <li class=\"step-1\"> <div class=\"row-steps\"> <img src=\"https://img.openpay.mx/plugins/vtex/cart_ico.svg\" alt=\"step_1\"> <p><span>Completa tu compra</span><br>Ingresa la información solicitada.</p> </div> </li>'\n                        +\n                        '<li class=\"step-2\"> <div class=\"row-steps\"> <img  src=\"https://img.openpay.mx/plugins/vtex/user_ico.svg\" alt=\"step_2\"> <div> <p><span>Ingresa tu cuenta PSE</span><br>Serás redireccionado. Ingresa tu correo y contraseña.</p> <p style=\"font-size: x-small; line-height: 100%;\">Si no tienes cuenta, deberás crear una.</p> </div> </div> </li> <li class=\"step-3\"> <div class=\"row-steps\"> <img  src=\"https://img.openpay.mx/plugins/vtex/shield_ico.svg\" alt=\"step_3\"> <div> <p><span>Autoriza la transacción</span><br>En el portal de tu banco, ingresa tus datos (usuario y contraseña)</p> </div> </div> </li> </ul> </section> </div> <div class=\"op-spei__footer\"> <p style=\"font-weight: bold; font-size: 15px; text-align: center; margin-top: 1.5rem;\">Recibirás la confirmación de tu compra al instante.</p> <p style=\"margin: 0; padding-bottom: 2rem; padding-top: 1rem;\"><span>Tu pago será procesado por</span> <img src=\"https://img.openpay.mx/plugins/vtex/openpay_logo.svg\" alt=\"Openpay Logo\"> </p> </div> </section>');\n                }\n\n                if (paymentMethods[i].name.toUpperCase() == \"PAGO EN TIENDA\" && country == \"MX\") {\n                    $('.custom' + paymentMethods[i].id + 'PaymentGroupPaymentGroup').html(\n                        '<section style=\"text-align: center; background-color: white;\" class=\"op-spei\"> <div class=\"op-spei__header\"> <img src=\"https://img.openpay.mx/plugins/vtex/paynet_logo.png\" alt=\"paynet\"> <p>Paga con efectivo en alguno de los establecimientos afiliados.<br>Tenemos más de 30 mil puntos de pago<a href=\"https://www.paynet.com.mx/mapa-tiendas/index.html\" target=\"_blank\"> Ubica el más cercano a ti.</a> </p> <div class=\"tiendas\"> <img src=\"https://img.openpay.mx/plugins/vtex/establecimientos_paynet_mx.png\" alt=\"establecimientos_paynet_mx\"> <a href=\"#storesModal\" data-toggle=\"modal\"><img src=\"https://img.openpay.mx/plugins/vtex/plus_ico.svg\"></a> </div> </div> <p class=\"title-steps\">Realiza el pago en 3 pasos:</p> <div class=\"op-spei__steps\"> <section class=\"step-list\"> <ul> <li class=\"step-1\"> <div class=\"row-steps\"> <img src=\"https://img.openpay.mx/plugins/vtex/cart_ico.svg\" alt=\"step_1\"> <p><span>Reserva tu compra</span><br>No te preocupes, tu pedido quedará en espera hasta que realices tu pago.</p> </div> </li>' \n                        + \n                        '<li class=\"step-2\"> <div class=\"row-steps\"> <img src=\"https://img.openpay.mx/plugins/vtex/ticket_ico.svg\" alt=\"step_2\"> <p><span>Guarda la referencia</span><br>Imprímela o tómale una foto y acude a un establecimiento.</p> </div> </li> <li class=\"step-3\"> <div class=\"row-steps\"> <img src=\"https://img.openpay.mx/plugins/vtex/store_ico.svg\" alt=\"step_3\"> <div> <p><span>Realiza el pago</span><br><a href=\"https://www.paynet.com.mx/mapa-tiendas/index.html\" target=\"_blank\">Ubica un establecimiento</a> cercano a ti.</p> <p style=\"font-size: x-small; line-height: 100%;\">La comisión por el uso del servicio puede variar de acuerdo con el establecimiento.</p> </div> </div> </li> </ul> </section> </div> <div class=\"op-spei__footer\"> <p style=\"font-weight: bold; font-size: 15px; text-align: center; margin-top: 1.5rem;\">Recibirás la confirmación de tu compra al instante.</p> <p style=\"margin: 0; padding-bottom: 2rem; padding-top: 1rem;\"><span>Tu pago será procesado por</span> <img src=\"https://img.openpay.mx/plugins/vtex/openpay_logo.svg\" alt=\"Openpay Logo\"> </p> </div></section>');\n                    $('body').append('<div id=\"storesModal\" class=\"modal hide fade\" aria-hidden=\"true\"> <div class=\"modal-header\"> <img class=\"close\" data-dismiss=\"modal\" src=\"https://img.openpay.mx/plugins/vtex/close_ico.svg\" alt=\"close\"> <h3>Establecimientos afiliados</h3> </div> <div class=\"modal-body\"> <img src=\"https://img.openpay.mx/plugins/vtex/tiendas_mx.png\" alt=\"tiendas_mx\"> </div> <div class=\"modal-footer\"> <a href=\"https://www.paynet.com.mx/mapa-tiendas/index.html\" target=\"_blank\"><button class=\"go-btn\"><img style=\"max-width: 5%;\" src=\"https://img.openpay.mx/plugins/vtex/location_ico.svg\"> Ubica un punto de pago cercano a ti</button></a></div></div>');\n                }\n\n                if (paymentMethods[i].name.toUpperCase() == \"PAGO EN TIENDA\" && country == \"CO\") {\n                    $('.custom' + paymentMethods[i].id + 'PaymentGroupPaymentGroup').html(\n                        '<section style=\"text-align: center; background-color: white;\" class=\"op-spei\"> <div class=\"op-spei__header\"> <h3>PAGO EN EFECTIVO</h3> <p>Realiza tu pago a través de alguna de nuestras redes de recaudo.<br>Tenemos más de 13 mil puntos.</p> <div class=\"tiendas\"> <img style=\"width: 35%;\" src=\"https://img.openpay.mx/plugins/vtex/Puntored.png\" alt=\"punto_red\"> <img style=\"width: 35%;\" src=\"https://img.openpay.mx/plugins/vtex/ViaBaloto.png\" alt=\"via_baloto\"> <a href=\"#storesModal\" data-toggle=\"modal\"><img src=\"https://img.openpay.mx/plugins/vtex/plus_ico.svg\"></a> </div> </div> <p class=\"title-steps\">Realiza el pago en 3 pasos:</p> <div class=\"op-spei__steps\"> <section class=\"step-list\"> <ul> <li class=\"step-1\"> <div class=\"row-steps\"> <img src=\"https://img.openpay.mx/plugins/vtex/cart_ico.svg\" alt=\"step_1\"> <p><span>Reserva tu compra</span><br>No te preocupes, tu pedido quedará en espera hasta que realices tu pago.</p> </div> </li>'\n                        +\n                        '<li class=\"step-2\"> <div class=\"row-steps\"> <img src=\"https://img.openpay.mx/plugins/vtex/ticket_ico.svg\" alt=\"step_2\"> <p><span>Guarda tu recibo de pago</span><br>Imprímelo o tómale una foto y acércate a algunoo de los puntos aliados de recaudo.</p> </div> </li> <li class=\"step-3\"> <div class=\"row-steps\"> <img src=\"https://img.openpay.mx/plugins/vtex/store_ico.svg\" alt=\"step_3\"> <div> <p><span>Realiza el pago</span><br><a href=\"https://www.paynet.com.mx/mapa-tiendas/index.html\" target=\"_blank\">Ubica el punto de pago</a> más cercano.</p> </div> </div> </li> </ul> </section> </div> <div class=\"op-spei__footer\"> <p style=\"font-weight: bold; font-size: 15px; text-align: center; margin-top: 1.5rem;\">Recibirás la confirmación de tu compra al instante.</p> <p style=\"margin: 0; padding-bottom: 2rem; padding-top: 1rem;\"><span>Tu pago será procesado por</span> <img src=\"https://img.openpay.mx/plugins/vtex/openpay_logo.svg\" alt=\"Openpay Logo\"> </p> </div></section>');\n                    $('body').append('<div id=\"storesModal\" class=\"modal hide fade\" aria-hidden=\"true\"> <div class=\"modal-header\"> <img class=\"close\" data-dismiss=\"modal\" src=\"https://img.openpay.mx/plugins/vtex/close_ico.svg\" alt=\"close\"> <h3>Red de recaudo a nivel nacional</h3> <div> <img src=\"https://img.openpay.mx/plugins/vtex/Puntored.png\" alt=\"punto_red\"> <img src=\"https://img.openpay.mx/plugins/vtex/ViaBaloto.png\" alt=\"via_baloto\"> </div> <h3>Efectivo en tiendas de autoservicio</h3> </div> <div class=\"modal-body\"> <img src=\"https://img.openpay.mx/plugins/vtex/tiendas_co.png\" alt=\"tiendas_co\"> </div> <div class=\"modal-footer\"> <a href=\"https://docs.openpay.co/docs/mapa-de-tiendas.html\" target=\"_blank\"><button class=\"go-btn\"><img style=\"max-width: 5%;\" src=\"https://img.openpay.mx/plugins/vtex/location_ico.svg\"> Ubica un punto de pago cercano a ti</button></a></div></div>');\n                }\n\n                if (paymentMethods[i].name.toUpperCase() == \"SPEI\") {\n                    $('.SPEIPaymentGroup').html('<section style=\"text-align: center; background-color: white;\" class=\"op-spei\"> <div class=\"op-spei__header\"> <img src=\"https://img.openpay.mx/plugins/vtex/spei_logo.png\" alt=\"SPEI\"> <p>Realiza tu pago por transferencia electrónica desde la banca en línea de tu preferencia.<br><a href=\"#\">Conoce todos los bancos participantes.</a></p> <div class=\"tiendas\"> <img src=\"https://img.openpay.mx/plugins/vtex/establecimientos_spei_mx.png\" alt=\"Establecimientos_SPEI_mexico\"> <a href=\"#banksModal\" data-toggle=\"modal\"><img src=\"https://img.openpay.mx/plugins/vtex/plus_ico.svg\"></a> </div> </div> <p class=\"title-steps\">Realiza el pago en 3 pasos:</p> <div class=\"op-spei__steps\"> <section class=\"step-list\"> <ul> <li class=\"step-1\"> <div class=\"row-steps\"> <img src=\"https://img.openpay.mx/plugins/vtex/cart_ico.svg\" alt=\"step_1\"> <p><span>Reserva tu compra</span><br>No te preocupes, tu pedido quedará en espera hasta que realices tu pago.</p> </div> </li>'\n                    +\n                    '<li class=\"step-2\"> <div class=\"row-steps\"> <img src=\"https://img.openpay.mx/plugins/vtex/ticket_ico.svg\" alt=\"step_2\"> <p><span>Sigue las instrucciones de pago</span><br>Desde el PDF que enviaremos al correo registrado en el proceso de compra.</p> </div> </li> <li class=\"step-3\"> <div class=\"row-steps\"> <img src=\"https://img.openpay.mx/plugins/vtex/wallet_ico.svg\" alt=\"step_3\"> <p><span>Realiza el pago</span><br>Desde el portal bancario de tu preferencia.</p> </div> </li> </ul> </section> </div> <div class=\"op-spei__footer\"> <p style=\"font-weight: bold; font-size: 15px; text-align: center; margin-top: 1.5rem;\">Recibirás la confirmación de tu compra al instante.</p> <p style=\"margin: 0; padding-bottom: 2rem; padding-top: 1rem;\"><span>Tu pago será procesado por</span> <img src=\"https://img.openpay.mx/plugins/vtex/openpay_logo.svg\" alt=\"Openpay Logo\"> </p> </div></section>');\n                    $('body').append('<div id=\"banksModal\" class=\"modal hide fade\" aria-hidden=\"true\"> <div class=\"modal-header\"> <img class=\"close\" data-dismiss=\"modal\" src=\"https://img.openpay.mx/plugins/vtex/close_ico.svg\" alt=\"close\"> <h3>Bancos participantes</h3> </div> <div class=\"modal-body\"> <img src=\"https://img.openpay.mx/plugins/vtex/bancos_spei.png\" alt=\"bancos_mx\"> </div></div>');\n                }\n                \n                if (paymentMethods[i].name.toUpperCase() == \"CHECKOUT LENDING\") {\n                    $('.custom' + paymentMethods[i].id + 'PaymentGroupPaymentGroup').html(\n                        '<section style=\"text-align: center; background-color: white;\" class=\"op-spei\"> <div class=\"op-spei__header\"> <img src=\"https://img.openpay.mx/plugins/vtex/kueski_logo.png\" alt=\"kueski\"> <p>Realiza tus compras a crédito, paga a plazos y sin tarjeta. </p> </div> <p class=\"title-steps\">Realiza el pago en 3 pasos:</p> <div class=\"op-spei__steps\"> <section class=\"step-list\"> <ul> <li class=\"step-1\"> <div class=\"row-steps\"> <img  src=\"https://img.openpay.mx/plugins/vtex/userplus_ico.svg\" alt=\"step_1\"> <p><span>Crea tu cuenta</span><br>Serás redireccionado a Kueski Pay.</p> </div> </li>'\n                        +\n                        '<li class=\"step-2\"> <div class=\"row-steps\"> <img  src=\"https://img.openpay.mx/plugins/vtex/form_ico.svg\" alt=\"step_2\"> <p><span>Contesta el formulario en línea</span><br>Descubre si tu crédito fue aprobado en minutos.</p> </div> </li> <li class=\"step-3\"> <div class=\"row-steps\"> <img  src=\"https://img.openpay.mx/plugins/vtex/page_ico.svg\" alt=\"step_3\"> <div> <p><span>Selecciona el plazo de pago que mejor te funcione</span></p> </div> </div> </li> </ul> </section> </div> <div class=\"op-spei__footer\"> <p style=\"font-weight: bold; font-size: 15px; text-align: center; margin-top: 1.5rem;\">Recibirás la confirmación de tu compra por correo y los detalles de tu crédito por parte de Kueski Pay.</p> <p style=\"margin: 0; padding-bottom: 2rem; padding-top: 1rem;\"><span>Tu pago será procesado por</span> <img src=\"https://img.openpay.mx/plugins/vtex/openpay_logo.svg\" alt=\"Openpay Logo\"> </p> </div></section>');\n                }\n                if (paymentMethods[i].name.toUpperCase() == \"PAGO EN AGENCIAS\") {\n                    $('.custom' + paymentMethods[i].id + 'PaymentGroupPaymentGroup').html(\n                        '<section style=\"text-align: center; background-color: white;\" class=\"pago_agencias op-spei\"> <div class=\"op-spei__header\"><h3>PAGO EN AGENCIAS</h3> <p>Realiza tu pago a través de alguna de nuestras agencias.</p> <div class=\"tiendas\"> <img style=\"width: 100%; \"src=\"https://img.openpay.mx/plugins/agencias_logos.png\" alt=\"agencias_logo\"> </div> </div> <p class=\"title-steps\">Realiza el pago en 3 pasos:</p> <div class=\"op-spei__steps\"> <section class=\"step-list\"> <ul> <li class=\"step-1\"> <div class=\"row-steps\"><img src=\"https://img.openpay.mx/plugins/vtex/cart_ico.svg\" alt=\"step_1\"> <p><span>Reserva tu compra</span><br>No te preocupes, tu pedido quedará en espera hasta que realices tu pago.</p></div> </li>'\n                        +\n                        '<li class=\"step-2\"> <div class=\"row-steps\"><img src=\"https://img.openpay.mx/plugins/vtex/ticket_ico.svg\" alt=\"step_2\"> <p><span>Guarda tu recibo de pago</span><br>Imprímelo o tómale una foto y acércate a alguna agencia aliada.</p></div> </li> <li class=\"step-3\"> <div class=\"row-steps\"><img src=\"https://img.openpay.mx/plugins/vtex/store_ico.svg\" alt=\"step_3\"> <div><p><span>Realiza el pago</span><br>Ubica tu agencia más cercana y realiza el pago.</p></div> </div> </li> </ul> </section> </div> <div class=\"op-spei__footer\"><p style=\"font-weight: bold; font-size: 15px; text-align: center; margin-top: 1.5rem;\"> Recibirás la confirmación de tu compra al instante.</p> <p style=\"margin: 0; padding-bottom: 2rem; padding-top: 1rem;\"><span>Tu pago será procesado por</span> <img src=\"https://img.openpay.mx/plugins/openpay_logo.svg\" alt=\"Openpay Logo\"></p></div></section>');\n                }\n            }\n        };\n    });\n</script>"
                     },
                     {
                         "type": "BOOLEAN",
@@ -100,9 +56,39 @@
                         "value": "false"
                     }
                 ],
-                "fingerprint": "1640101417082",
+                "fingerprint": "1710993413908",
                 "firingTriggerId": [
-                    "73"
+                    "7"
+                ],
+                "tagFiringOption": "ONCE_PER_EVENT",
+                "monitoringMetadata": {
+                    "type": "MAP"
+                },
+                "consentSettings": {
+                    "consentStatus": "NOT_SET"
+                }
+            },
+            {
+                "accountId": "6220527586",
+                "containerId": "179324859",
+                "tagId": "11",
+                "name": "Openpay-PaymentReference",
+                "type": "html",
+                "parameter": [
+                    {
+                        "type": "TEMPLATE",
+                        "key": "html",
+                        "value": "\n<script>\n    $(document).ready(function(){\n        var alertPaymentDeclined = function(){\n            $('#app-top').find('h1').text('Pago no completado');\n            $('#app-top').find('.cconf-alert').empty();\n            $('#app-top').find('.cconf-alert').removeClass('bg-washed-green b--green');\n            $('#app-top').find('.cconf-alert').addClass('bg-washed-red b--red');\n\n            $('#app-top').find('.cconf-alert').append('<div class=\"fl w-100 w-100-ns\" style=\"overflow-wrap: break-word;\"><span class=\"db f4 fw6 mb4 dark\"><span>Su transacción fue rechazada!</span></span><p class=\"dark\"><span>Su banco rechazo el pago, el pedido no puede ser procesado por el comercio.</span></p><p class=\"dark\"><span>Intente su pago nuevamente.</span></p></div>');\n        }\n        var showPdfButton = function (host, merchantId, tid, nsu, tipoPago, isSpei){\n            var url = host + '/paynet-pdf/' + merchantId + '/' + tid;\n            $('#app-top').find('h1').text('Pedido en Proceso')\n            if (isSpei) {\n                url = host + '/spei-pdf/' + merchantId + '/' + nsu;\n                $('#app-top').find('.cconf-alert').empty()\n                $('#app-top').find('.cconf-alert').append('<div class=\"fl w-100 w-100-ns\" style=\"overflow-wrap: break-word;\"><span class=\"db f4 fw6 mb4 dark-green\"><span>¡Realiza tu transferencia y confirma tu pedido!</span></span><p class=\"dark-green\"><span>Imprime o guarda tu recibo en el botón <strong>\"Imprimir PDF de SPEI\"</strong>, sigue las instrucciones paso a paso y realiza tu SPEI a través de tu app o portal bancario.</span></p></div>');\n            }\n            console.log('Url referenceOpenPay: ' + url);\n            var buttonTag = \"Imprimir PDF de \" + tipoPago;\n            $('#checkout-confirmation-top').append('<div class=\"openpay-referencia ph3-ns w-70-ns center\"><div style=\"padding: 10px 20px;margin-top: 10px;background: white;display: inline-block;border-radius:5px;cursor: pointer;box-shadow: 0 1px 3px 0 rgba(0,0,0,.25);\"><a style=\"text-decoration: none;color: #137752;\" href=\"'+ url + '\" target=\"_blank\">'+buttonTag+'</a></div></div>');\n        }\n\n        var initOrderData = function() {\n            switch(country.toUpperCase()) {\n                case \"CO\":\n                    host = (isSandbox) ? 'https://sandbox-dashboard.openpay.co' : 'https://dashboard.openpay.co';\n                    break;\n                case \"PE\":\n                    host = (isSandbox) ? 'https://sandbox-dashboard.openpay.pe' : 'https://dashboard.openpay.pe';\n                    break;\n                case \"MX\":\n                default:\n                    host = (isSandbox) ? 'https://sandbox-dashboard.openpay.mx' : 'https://dashboard.openpay.mx';\n            }\n\n            $.get('/api/checkout/pub/orders/order-group/' + orderId, function(data, status){\n                if (data.length>0 && data[0].paymentData.transactions.length > 0 && data[0].paymentData.transactions[0].payments.length > 0) {\n                    var allowedAcquiers = [\"OPENPAY\", \"OPENPAYV2\"]\n                    var offlinePaymentAllowed = [\"PAGO EN TIENDA\", \"EFECTIVO\", \"PAGO EN AGENCIAS\"]\n                    var pago = data[0].paymentData.transactions[0].payments[0];\n                    var tipoPago = pago.paymentSystemName.replace(\"  \", \" \");\n                    var orderData = pago.connectorResponses;\n                    var messageStatus = orderData.Message;\n                    var tid= orderData.Tid;\n                    var nsu= orderData.nsu;\n                    var isSpei = 'SPEI' === tipoPago;\n                    var isPagoTienda = offlinePaymentAllowed.includes(tipoPago.toUpperCase())\n                    var acquier = pago.connectorResponses.acquirer;\n\n                    if (allowedAcquiers.includes(acquier.toUpperCase())) {\n                        if(messageStatus === \"Pending for confirm\" && !(isSpei || isPagoTienda)){\n                            //console.log('alertPaymenDecliend off');\n                            alertPaymentDeclined();\n                        } else if ((tid !== nsu) && (isSpei || isPagoTienda)){\n                            showPdfButton(host, merchantId, tid, nsu, tipoPago, isSpei);\n                        } else {\n                            console.log('Openpay no reference url');\n                        }\n                    }\n                }\n            });\n        }\n        setTimeout(initOrderData(),2000);\n    });\n</script>"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "supportDocumentWrite",
+                        "value": "false"
+                    }
+                ],
+                "fingerprint": "1710182614283",
+                "firingTriggerId": [
+                    "10"
                 ],
                 "tagFiringOption": "ONCE_PER_EVENT",
                 "monitoringMetadata": {
@@ -115,9 +101,51 @@
         ],
         "trigger": [
             {
-                "accountId": "4702907809",
-                "containerId": "13043242",
-                "triggerId": "70",
+                "accountId": "6220527586",
+                "containerId": "179324859",
+                "triggerId": "7",
+                "name": "Openpay-CheckoutDescriptions",
+                "type": "CUSTOM_EVENT",
+                "customEventFilter": [
+                    {
+                        "type": "MATCH_REGEX",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{_event}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": ".*"
+                            }
+                        ]
+                    }
+                ],
+                "filter": [
+                    {
+                        "type": "CONTAINS",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{Event}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": "payment"
+                            }
+                        ]
+                    }
+                ],
+                "fingerprint": "1710176207715"
+            },
+            {
+                "accountId": "6220527586",
+                "containerId": "179324859",
+                "triggerId": "10",
                 "name": "Openpay-PaymentReferenceTrigger",
                 "type": "CUSTOM_EVENT",
                 "customEventFilter": [
@@ -154,156 +182,48 @@
                         ]
                     }
                 ],
-                "fingerprint": "1617841080889"
-            },
-            {
-                "accountId": "4702907809",
-                "containerId": "13043242",
-                "triggerId": "73",
-                "name": "Openpay-DeviceSessionId",
-                "type": "CUSTOM_EVENT",
-                "customEventFilter": [
-                    {
-                        "type": "MATCH_REGEX",
-                        "parameter": [
-                            {
-                                "type": "TEMPLATE",
-                                "key": "arg0",
-                                "value": "{{_event}}"
-                            },
-                            {
-                                "type": "TEMPLATE",
-                                "key": "arg1",
-                                "value": ".*"
-                            }
-                        ]
-                    }
-                ],
-                "filter": [
-                    {
-                        "type": "CONTAINS",
-                        "parameter": [
-                            {
-                                "type": "TEMPLATE",
-                                "key": "arg0",
-                                "value": "{{Event}}"
-                            },
-                            {
-                                "type": "TEMPLATE",
-                                "key": "arg1",
-                                "value": "payment"
-                            }
-                        ]
-                    }
-                ],
-                "fingerprint": "1586464440552"
-            }
-        ],
-        "variable": [
-            {
-                "accountId": "4702907809",
-                "containerId": "13043242",
-                "variableId": "61",
-                "name": "openpay_sandbox_mode",
-                "type": "c",
-                "parameter": [
-                    {
-                        "type": "TEMPLATE",
-                        "key": "value",
-                        "value": "true"
-                    }
-                ],
-                "fingerprint": "1595026835997",
-                "formatValue": {}
-            },
-            {
-                "accountId": "4702907809",
-                "containerId": "13043242",
-                "variableId": "71",
-                "name": "openpay_merchant_id",
-                "type": "c",
-                "parameter": [
-                    {
-                        "type": "TEMPLATE",
-                        "key": "value",
-                        "value": "mxxxxxxxxxxxxxxxxxxx"
-                    }
-                ],
-                "fingerprint": "1595026796277",
-                "formatValue": {}
-            },
-            {
-                "accountId": "4702907809",
-                "containerId": "13043242",
-                "variableId": "74",
-                "name": "openpay_public_key",
-                "type": "c",
-                "parameter": [
-                    {
-                        "type": "TEMPLATE",
-                        "key": "value",
-                        "value": "pk_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-                    }
-                ],
-                "fingerprint": "1595026828297",
-                "formatValue": {}
-            },
-            {
-                "accountId": "4702907809",
-                "containerId": "13043242",
-                "variableId": "76",
-                "name": "openpay_country",
-                "type": "c",
-                "parameter": [
-                    {
-                        "type": "TEMPLATE",
-                        "key": "value",
-                        "value": "MX"
-                    }
-                ],
-                "fingerprint": "1635361148472",
-                "formatValue": {}
+                "fingerprint": "1709659021614"
             }
         ],
         "builtInVariable": [
             {
-                "accountId": "4702907809",
-                "containerId": "13043242",
+                "accountId": "6220527586",
+                "containerId": "179324859",
                 "type": "PAGE_URL",
                 "name": "Page URL"
             },
             {
-                "accountId": "4702907809",
-                "containerId": "13043242",
+                "accountId": "6220527586",
+                "containerId": "179324859",
                 "type": "PAGE_HOSTNAME",
                 "name": "Page Hostname"
             },
             {
-                "accountId": "4702907809",
-                "containerId": "13043242",
+                "accountId": "6220527586",
+                "containerId": "179324859",
                 "type": "PAGE_PATH",
                 "name": "Page Path"
             },
             {
-                "accountId": "4702907809",
-                "containerId": "13043242",
+                "accountId": "6220527586",
+                "containerId": "179324859",
                 "type": "REFERRER",
                 "name": "Referrer"
             },
             {
-                "accountId": "4702907809",
-                "containerId": "13043242",
+                "accountId": "6220527586",
+                "containerId": "179324859",
                 "type": "EVENT",
                 "name": "Event"
             },
             {
-                "accountId": "4702907809",
-                "containerId": "13043242",
+                "accountId": "6220527586",
+                "containerId": "179324859",
                 "type": "CONTAINER_VERSION",
                 "name": "Container Version"
             }
         ],
-        "fingerprint": "1649780538175",
-        "tagManagerUrl": "https://tagmanager.google.com/#/versions/accounts/4702907809/containers/13043242/versions/156?apiLink=version"
+        "fingerprint": "1712797285683",
+        "tagManagerUrl": "https://tagmanager.google.com/#/versions/accounts/6220527586/containers/179324859/versions/0?apiLink=version"
     }
 }
